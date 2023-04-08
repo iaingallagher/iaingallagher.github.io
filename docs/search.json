@@ -28,11 +28,11 @@
     "text": "First you’ll need to have the version control sofware git installed on your system. If you’re not familiar with git then there’s some good teaching here. Once you have git installed you have to set your identity.\ngit config --global user.name \"Your Name\"\ngit config --global user.email \"YourEmail@XYZ.com\"\nThe email you use should be the same one you’ll use when you sign up for Github.\nYou can also set a default branch for your code. I use main for this. This is where the final code for the blog will live.\ngit config --global init.defaultBranch main\nYou’ll also need an account on Github. Github provides a free service called Github pages that allows you to host a free website.\nYou’ll also need to install Quarto.\nOnce we have git & Quarto installed and a Github account ready the workflow we’ll follow here is:\n\nCreate a blog repository on Github\nCopy (clone) that repository to our local computer\nSetup the blog structure in the local repository using Quarto\nCreate content for the blog using Quarto\nPush the content to the online repository\n\nOnce we’ve done the first three steps the last two steps can be repeated as we add new blog posts.\nI’ll be using a Unix based operating system either Mac OSX or linux & we’ll be using the command line. If you want to follow the process on Windows you’ll probably need to change a few commands used to create files or change directories from Unix commands to Windows commands. The git and quarto commands will all remain the same.\nOnce you have installed git and set up your git identity go to Github, create a free account and set up the various security options. Install Quarto on your computer."
   },
   {
-    "objectID": "posts/quarto_github_pages/blog_process.html#github",
-    "href": "posts/quarto_github_pages/blog_process.html#github",
+    "objectID": "posts/quarto_github_pages/blog_process.html#github-set-up",
+    "href": "posts/quarto_github_pages/blog_process.html#github-set-up",
     "title": "Quarto with Github Pages",
     "section": "",
-    "text": "On GitHub create a new repo named your_github_username.github.io replacing your_github_username with your actual Github username. Do not add a README or license file just now.\nOn your local computer change to the directory you want to use for your blog and clone the Github repo into that directory.\ncd ~/blog_directory\ngit clone git@github.com:THE_REPO_ADDRESS\nif you’re using ssh.\ncd ~/blog_directory\ngit clone https://github.com/THE_REPO_ADDRESS\nif you’re using https.\nThis will download the files on Github into the local directory. You’ll probably get a warning like:\nwarning: You appear to have cloned an empty repository.\nThat’s ok… you have cloned an empty repository!"
+    "text": "On Github create a new repo named your_github_username.github.io replacing your_github_username with your actual Github username. Do not add a README or license file just now.\nOn your local computer change to the directory you want to use for your blog and clone the Github repo into that directory.\ncd ~/blog_directory\ngit clone git@github.com:THE_REPO_ADDRESS\nif you’re using ssh.\ncd ~/blog_directory\ngit clone https://github.com/THE_REPO_ADDRESS\nif you’re using https.\nThis will download the files on Github into the local directory. You’ll probably get a warning like:\nwarning: You appear to have cloned an empty repository.\nThat’s ok… you have cloned an empty repository!"
   },
   {
     "objectID": "posts/quarto_github_pages/blog_process.html#create-the-blog",
@@ -42,11 +42,11 @@
     "text": "There are full instructions here.\nChange into the local repo you just cloned.\ncd ~/blog_directory/your_github_username.github.io\nCreate a local copy of your blog by typing:\nquarto create-project --type website:blog\nQuarto will create several files and directories required to create the blog:\n\n_quarto.yml\nindex.qmd\nabout.qmd\nposts/\nposts/_metadata.yml\nstyles.css\n\nAdd an empty file named .nojekyll at the top level:\n# change directory\ncd your_github_username.github.io\n# add a file\ntouch .nojekyll\nThis is required so that Github pages will serve our blog properly later. See the Github pages section here.\nWe also need to set the output directory in the _quarto.yml file so the top of the file reads:\nproject:\n  type: website\n  output-dir: docs\nIf you want to add social media details you can make edits to the about.qmd file (see the webpage above)."
   },
   {
-    "objectID": "posts/quarto_github_pages/blog_process.html#push-blog-to-github",
-    "href": "posts/quarto_github_pages/blog_process.html#push-blog-to-github",
+    "objectID": "posts/quarto_github_pages/blog_process.html#setting-git-to-track-the-blog",
+    "href": "posts/quarto_github_pages/blog_process.html#setting-git-to-track-the-blog",
     "title": "Quarto with Github Pages",
     "section": "",
-    "text": "We want to push the files we have created to the adding-content branch online.\ngit push origin adding-content\nGo to Github and log in if you have to. You should see a message that the adding-content branch has had content pushed to it.\n\n\n\nPull request\n\n\nPress the green button and follow the prompts to merge your changes to the main branch on Github.\nOn the GitHub page for your repo go to Settings (top right of the page) & scroll down until you see the section for GitHub pages. Click on the Source (it probably says Deploy from a branch) & select /docs.\n\n\n\nSet serve directory\n\n\nPress save. This tells GitHub Pages to look in themain branch of the project and in the docs directory for files to serve."
+    "text": "Move into the new directory created by Quarto:\ncd your_github_username.github.io\nType git init. This will tell git to start tracking the files in the blog directory. You can make sure this is working by typing git status & git should list all the directories and files in the your_github_username.github.io directory. You should also see that you are on the main branch."
   },
   {
     "objectID": "posts/quarto_github_pages/blog_process.html#adding-a-content-branch",
@@ -63,39 +63,18 @@
     "text": "The workflow to create content is to write in markdown and then use the tools in Quarto to render the markdown to html. If you made your blog repo as above with Quarto then Quarto will take care of adding blog posts to the index page of your blog.\nCreate a new Quarto file written in markdown. As you’re doing so you can check what the page will look like using the Render button in RStudio orVS Code if you’re using either of these for your writing.\nOnce you’re satisfied with the markdown file create a new folder in the /posts directory of your blog repo. Give the folder an informative name.\n# change to posts dir\ncd your_github.username.github.io/posts\n# create new dir to hold current content\nmkdir quarto_github_pages\n# move .qmd file to posts/new_dir\ncp path/to/content.qmd posts/quarto_github_pages\nNow we can add this file to git.\n# check your on adding content\ngit status\n# add the file\ngit add posts/quarto_github_pages/content.qmd\n# commit the file & add a message\ngit commit -m \"added first post to blog\"\n# check all is well\ngit status"
   },
   {
-    "objectID": "posts/quarto_github_pages/blog_process.html#serving-the-blog",
-    "href": "posts/quarto_github_pages/blog_process.html#serving-the-blog",
-    "title": "Quarto with Github Pages",
-    "section": "",
-    "text": "To serve the blog we have to generate html files. We can do this with the Quarto render command.\nTo make sure we do not screw up the main branch move back to the adding-content branch on your local machine.\ngit checkout adding-content\nIn the terminal run the command\nquarto render\nThus will render the whole site and create a new _site directory.\ngit status shows untracked ../../_site\nMake sure that folder is tracked by git.\ngit add ../../_site\ngit commit -m \"useful m\"\ngit push origin adding-content"
-  },
-  {
-    "objectID": "posts/quarto_github_pages/blog_process.html#summary-of-process",
-    "href": "posts/quarto_github_pages/blog_process.html#summary-of-process",
-    "title": "Quarto with Github Pages",
-    "section": "",
-    "text": "The first time you do this git status should show the docs/ directory as untracked and posts/some_folder/some_file.qmd as staged but not committed. Use git add docs/ and then git add posts/some_folder/some_file.qmd to tell git to track the changes.\nSubsequently git status will only show the folder that has changed or is new in the posts directory. You need to explicitly add the folder and the files inside that folder.\ngit add posts/new_folder\ngit add .\nUse git commit -m \"some informative message\" to commit the changes.\nNow push the repository with the new branch up to Github.\ngit push origin adding-content\nNotice that we push to adding-content NOT to main.\nOn GitHub there should be a pull request generated to pull the changes from adding-content into the main branch. Create the pull request, give it a meaningful message (e.g. ‘post on quarto & github pages’) and then (all going well) merge the pull request into main following the prompts on Github.\nYou should now (well after a few minutes) be able to see your blog at your_github_username.github.io.\nOn your local machine move back to the main branch.\ngit checkout main\nPull the contents of the main branch on Github (which you just updated) down to the local machine.\ngit pull origin main\nSo far we have made sure that our online repo and our local directory and local branches all have the same content."
-  },
-  {
-    "objectID": "posts/welcome/index.html",
-    "href": "posts/welcome/index.html",
-    "title": "Welcome To My Blog",
-    "section": "",
-    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
-  },
-  {
-    "objectID": "posts/quarto_github_pages/blog_process.html#setting-git-to-track-the-blog",
-    "href": "posts/quarto_github_pages/blog_process.html#setting-git-to-track-the-blog",
-    "title": "Quarto with Github Pages",
-    "section": "",
-    "text": "Move into the new directory created by Quarto:\ncd your_github_username.github.io\nType git init. This will tell git to start tracking the files in the blog directory. You can make sure this is working by typing git status & git should list all the directories and files in the your_github_username.github.io directory. You should also see that you are on the main branch."
-  },
-  {
     "objectID": "posts/quarto_github_pages/blog_process.html#render-the-site",
     "href": "posts/quarto_github_pages/blog_process.html#render-the-site",
     "title": "Quarto with Github Pages",
     "section": "",
     "text": "Now we have some content we can use quarto to render the actual site. Make sure you are in the top level directory of your blog (e.g. your_github_username.github.io) and type quarto preview to preview the site.\nIf it all looks good press ctrl+c to stop the site being served.\nYou can now render the site with quarto render. This will add several new files & directories.\nAdd these to the adding-content branch following the git workflow.\ngit status # make sure you are on adding-content branch\ngit add .\ngit status\ngit commit -m \"some useful commit message\"\ngit status\nNow we’re ready to send the site to Github."
+  },
+  {
+    "objectID": "posts/quarto_github_pages/blog_process.html#push-blog-to-github",
+    "href": "posts/quarto_github_pages/blog_process.html#push-blog-to-github",
+    "title": "Quarto with Github Pages",
+    "section": "",
+    "text": "We want to push the files we have created to the adding-content branch online.\ngit push origin adding-content\nGo to Github and log in if you have to. You should see a message that the adding-content branch has had content pushed to it.\n\n\n\nPull request\n\n\nPress the green button and follow the prompts to merge your changes to the main branch on Github.\nOn the GitHub page for your repo go to Settings (top right of the page) & scroll down until you see the section for GitHub pages. Click on the Source (it probably says Deploy from a branch) & select /docs.\n\n\n\nSet serve directory\n\n\nPress save. This tells GitHub Pages to look in themain branch of the project and in the docs directory for files to serve."
   },
   {
     "objectID": "posts/quarto_github_pages/blog_process.html#syncing-online-and-local",
@@ -112,10 +91,10 @@
     "text": "A lot of what we did above was once off. For subsequent posts we will:\n\nDraft content in markdown\nTrack that content on the local adding-content branch\n\ngit checkout adding-content\ngit status # make sure you're on adding-content\ngit add XYZ\ngit status\ngit commit -m \"some commit message\"\ngit status\n\nPush the adding-content branch to Github when we’re ready to publish the page\n\ngit push origin adding-content\n\nMerge the changes to the main branch online using a Github pull request\n\nGithib should automatically serve the page we created.\n\nPull the finalised main branch from Github back to the local machine\n\ngit checkout main   \ngit pull origin main"
   },
   {
-    "objectID": "posts/quarto_github_pages/blog_process.html#github-set-up",
-    "href": "posts/quarto_github_pages/blog_process.html#github-set-up",
-    "title": "Quarto with Github Pages",
+    "objectID": "posts/welcome/index.html",
+    "href": "posts/welcome/index.html",
+    "title": "Welcome To My Blog",
     "section": "",
-    "text": "On Github create a new repo named your_github_username.github.io replacing your_github_username with your actual Github username. Do not add a README or license file just now.\nOn your local computer change to the directory you want to use for your blog and clone the Github repo into that directory.\ncd ~/blog_directory\ngit clone git@github.com:THE_REPO_ADDRESS\nif you’re using ssh.\ncd ~/blog_directory\ngit clone https://github.com/THE_REPO_ADDRESS\nif you’re using https.\nThis will download the files on Github into the local directory. You’ll probably get a warning like:\nwarning: You appear to have cloned an empty repository.\nThat’s ok… you have cloned an empty repository!"
+    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
   }
 ]
