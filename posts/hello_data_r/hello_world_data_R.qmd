@@ -1,0 +1,225 @@
+---
+title: "Hello Data World 1 (R)"
+date: 06/14/2022
+bibliography: r_references.bib
+categories: [R]
+editor_options: 
+  chunk_output_type: console
+format:
+  html:
+    code-overflow: wrap  
+image: Rlogo.png  
+---
+
+## Introduction
+
+In programming it's traditional that the first thing you learn to do in a new language is to print 'Hello, World!' to the screen. This is the first of three 'Hello World' posts that will walk through some data handling & analysis tasks. These will be a bit more complex than printing 'Hello, World!' but will provide a look at how to approach data loading, exploration, filtering, plotting and statistical testing. Each post will use a different language & in this first post we will use [R](https://www.r-project.org/) - because it's the language I know best (i.e. least worst). The next two posts will carry out the same tasks using [python](https://www.python.org/) and [julia](https://julialang.org/). R and python are popular in data science and julia is a promising newcomer.
+
+In each post we will load a dataset from a csv file, carry out some summarisation and exploratory plotting, some data filtering and finally carry out statistical testing on two groups using frequentist and Bayesian techniques. These are not exactly beginners posts but the aim is to give a flavour of how basic data exploration & analysis can be done in each language.
+
+If you want to follow along the data are [here](https://github.com/iaingallagher/iaingallagher.github.io/tree/main/data).
+
+## Preliminaries
+
+R has a lot of base functionality for data handling, exploration & statistical analysis; it's what R was designed for. However we are going to make use of the 'tidyverse' [@wickham2019] because it has become a very popular approach to data handling & analysis in R.
+
+> The tidyverse encompasses the repeated tasks at the heart of every data science project: data import, tidying, manipulation, visualisation, and programming.
+
+As well as data handling & visualisation we will also be carrying out some statistical testing. R is well served for basic frequentist statistics and there's nothing extra we need. For Bayesian analysis we will use the Stan probabilistic programming language [@carpenter2017]. We will code a model by hand and use the `cmdstanr` package to pass that model to Stan. We will also use the `brms` package [@bürkner2017] which makes writing Stan models easier. Details on how to install the `cmdstanr` package and Stan are [here](https://mc-stan.org/cmdstanr/) (see the section on *Installing CmdStan* for how to install `Stan`). Note that `brms` also needs `Stan` to be installed. We load the packages we need in the code below.
+
+```{r}
+#| warning: false
+#| message: false
+
+# data loading & plotting
+library(tidyverse) # meta-package; loads several packages
+# set theme for ggplot2 plotting
+theme_set(theme_bw())
+# bayesian modeling
+library(cmdstanr)
+# easier bayesian modeling
+library(brms)
+# plot bayesian models
+library(bayesplot)
+```
+
+### Loading the data
+
+These data are from body composition practicals run as part of the Sport & Exercise Science degree at the University of Stirling. They were collected over a number of years by the students who carried out various measures on themselves.
+
+```{r}
+# load the data
+data_in <- read_csv('data/BODY_COMPOSITION_DATA.csv')
+```
+
+### Exploration & tidying
+
+First we make sure the data looks as we expect it to.
+
+```{r}
+# examine the data
+glimpse(data_in)
+summary(data_in) # tells us about NA values
+```
+
+We should deal with the missing values before we do any further analysis. There are many ways to deal with missing values but here we will just drop rows with missing values from the data using the `complete.cases()` function.
+
+```{r}
+# drop rows with NA values
+data_in <- data_in[complete.cases(data_in), ]
+summary(data_in)
+```
+
+According to the 'tidy data' philosophy [@wickham2014] we want our data in long format rather than wide format. This also makes it easier to carry out later data wrangling, plotting and testing.
+
+```{r}
+# wide to long data
+data_inL <- pivot_longer(data_in, cols = `girths`:`Waist`, names_to = 'measure', values_to = 'value')
+head(data_inL)
+```
+
+Now the values for each individual and each measurement technique are identified by rows rather than spread across row & column combinations. Exploration with plots is an essential step for checking values and the distribution of data. The `tidyverse` provides the `ggplot2` package for this.
+
+```{r}
+# custom colors for male & female
+plot_cols <- c('firebrick', 'cornflowerblue')
+# make the plot
+ggplot(data_inL, aes(sex, value, colour = sex)) + geom_jitter(width = 0.1) + 
+  scale_colour_manual(values = plot_cols) + 
+  theme(legend.position = "none") +
+  facet_wrap(~measure, scales = "free_y")
+```
+
+There are a couple of mad values in the `BMI` and `girths` variables. For the rest of the analysis we'll concentrate on the `BMI` variable. Removing outliers is a contentious subject but here a BMI of 2 is incompatible with life! So we'll remove this unreasonably low value.
+
+```{r}
+# get just bmi data
+bmi_data <- data_inL %>% filter(measure == "BMI")
+# remove low value
+bmi_data <- bmi_data %>% filter(value > 15)
+# check with a new plot
+bmi_data %>% ggplot(aes(sex, value, colour = sex)) + geom_jitter(width = 0.1, size = 3) +
+  scale_colour_manual(values = plot_cols) + 
+  theme(legend.position = "none") 
+```
+
+Much better! 
+
+### Frequentist testing
+
+Now let's use a t-test to examine whether male and female BMI is different. In R basic statistical tests are easy; there are no extraneous packages to load and there's a pretty simple 'formula' interface using the tilde (`~`). Note that by default R uses Welch's t-test which does not assume equal variances in each group (see `?t.test`).
+
+```{r}
+# t-test
+t.test(value ~ sex, data = bmi_data)
+```
+
+The difference between male & female BMI is significant. This means that in a hypothetical long series of repeats of this study with different samples from the same population we would expect to see a difference as big or bigger between the sexes in more than 95% of those study repeats.
+
+### Bayesian testing
+
+There are several packages for Bayesian statistics in R. We'll use the `cmdstanr` package to write a Bayesian model in the `Stan` probabilistic programming language for assessing the difference between male and female BMI. `Stan` will do the heavy lifting for us (Markov Chain Monte Carlo (MCMC sampling)) and return a data object we can use in R.
+
+```{r}
+# create data list
+sex <- bmi_data %>% select(sex) %>% pull() # labels for participant sex
+# convert to dummy coding; females are coded as 0
+sex_dummy <- ifelse(sex == 'F', 0, 1)
+# bmi values
+bmi <- bmi_data %>% select(value) %>% pull() 
+# get num subjects
+N <- nrow(bmi_data) # length of dataset
+# make a list of data to pass to Stan
+data_list <- list(N = N, sex = sex_dummy, bmi = bmi)
+
+# define the model in Stan as a text string; can also pass in a separate .stan file
+# stan code is written in blocks (data, parameters, model etc) defined by {}
+model_string <- "
+
+// data we want to model
+data{
+  int<lower=1> N; // length of the data
+  vector[N] bmi; // bmi data of length N
+  vector[N] sex; // sex data of length N
+}
+
+// parameters we want to estimate
+parameters{
+  real beta0; // intercept
+  real beta1; // slope
+  real<lower=0> sigma; // residual sd, must be positive
+}
+
+// priors for model
+model{
+  // priors
+  beta0 ~ normal(25, 10); // intercept
+  beta1 ~ normal(0, 5); // slope
+  sigma ~ normal(0,100); // defined as positive only in parameters block
+  
+  //likelihood
+  bmi ~ normal(beta0 + beta1*sex, sigma);
+}"
+
+# write file to temp dir
+stan_mod_temp <- write_stan_file(model_string, dir = tempdir())
+# create Stan model
+stan_mod <- cmdstan_model(stan_mod_temp)
+# fit the model using Stan
+fit <- stan_mod$sample(data = data_list, seed = 123, chains = 4, parallel_chains = 2, refresh = 500 )
+
+# summary plus diagnostics
+fit$summary()
+# just the params
+# fit$summary(c("beta0", "beta1", "sigma"), "mean", "sd")
+```
+
+The output tells us that the estimated means for female BMI is 22.8 (females were dummy coded as 0). Given the priors we used we can say that there is a 90% probability that the value for female BMI lies between 22.3 and 23.4. The estimated male BMI is 0.81 (with 90% probability of being between 0.13 & 1.48) units greater than female BMI i.e. ~23.6. The mean values are the same as estimated by the frequentist $t$-test procedure. 
+
+To plot the posterior distributions we can extract the posterior draws and use the `bayesplot` package.
+
+```{r}
+# get the draws; uses posterior package
+draws <- fit$draws(variables = c('beta0', 'beta1', 'sigma'))
+# plot the draws; bayesplot package
+mcmc_dens(draws)
+```
+
+Plotting the posterior distribution for the male BMI is as simple as adding together the draws for `beta0` and `beta1`.
+
+```{r}
+# draws to dataframe
+draws_df <- as_draws_df(draws)
+# posterior for male bmi included
+bmi_posteriors <- draws_df %>% mutate(male_bmi_post = beta0 + beta1)
+mcmc_dens(bmi_posteriors, pars = c('beta0', 'male_bmi_post', 'sigma'))
+```
+
+There are easier ways to create basic (and more complex) Bayesian models than writing out the `Stan` code by hand. The `brms` package allows us to write Bayesian models using R modeling syntax. The model is translated to `Stan` and then compiled & run.
+
+```{r}
+# brms bayesian modelling; same priors as above
+brms_mod <- brm(value ~ sex, data = bmi_data,
+                prior = c(prior(normal(25, 10), class = "Intercept"), # prior on intercept
+                          prior(normal(0, 5), class = "b", coef = 'sexM'), # prior on slope
+                          prior(normal(0, 100), class = "sigma")), # prior on resid var
+                iter = 3000, warmup = 500, chains = 4, seed = 1234)
+# model summary
+summary(brms_mod)
+```
+
+The values for each coefficient are the same as both the frequentist model and the handcoded `Stan` model (as we'd expect).
+
+Plotting the model can be done with the `mcmc_plot()` function in `brms`.
+
+```{r}
+# plot the draws using built-in brms functions (that calls bayesplot)
+# regex  = TRUE for regular expression (^b) to pull out beta coefficients
+mcmc_plot(brms_mod, variable = c('^b', 'sigma'), type = 'dens', regex = TRUE)
+```
+
+An even easier (but less flexible) package is [`rstanarm`](https://mc-stan.org/rstanarm/).
+
+## Summary
+
+This post has been a quick skip through some data loading, exploration, filtering and both frequentist & Bayesian modelling in R.  
