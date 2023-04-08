@@ -91,13 +91,6 @@
     "text": "A lot of what we did above was once off. For subsequent posts we will:\n\nDraft content in markdown\nTrack that content on the local adding-content branch\n\ngit checkout adding-content\ngit status # make sure you're on adding-content\ngit add XYZ\ngit status\ngit commit -m \"some commit message\"\ngit status\n\nPush the adding-content branch to Github when we’re ready to publish the page\n\ngit push origin adding-content\n\nMerge the changes to the main branch online using a Github pull request\n\nGithub should automatically serve the page we created.\n\nPull the finalised main branch from Github back to the local machine\n\ngit checkout main   \ngit pull origin main"
   },
   {
-    "objectID": "posts/welcome/index.html",
-    "href": "posts/welcome/index.html",
-    "title": "Welcome To My Blog",
-    "section": "",
-    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
-  },
-  {
     "objectID": "posts/hello_data_r/hello_world_data_R.html",
     "href": "posts/hello_data_r/hello_world_data_R.html",
     "title": "Hello Data World 1 (R)",
@@ -124,5 +117,12 @@
     "title": "Hello Data World 1 (R)",
     "section": "Summary",
     "text": "Summary\nThis post has been a quick skip through some data loading, exploration, filtering and both frequentist & Bayesian modelling in R."
+  },
+  {
+    "objectID": "posts/welcome/index.html",
+    "href": "posts/welcome/index.html",
+    "title": "Welcome To My Blog",
+    "section": "",
+    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
   }
 ]
