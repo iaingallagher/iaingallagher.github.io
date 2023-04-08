@@ -148,35 +148,41 @@ ul.task-list li input[type="checkbox"] {
 <section id="github-pages-with-quarto" class="level1">
 <h1>Github Pages with Quarto</h1>
 <p><a href="https://quarto.org/">Quarto</a> is an “open-source scientific and technical publishing system built on Pandoc”. What does that mean?</p>
-<p>It means that you can use a simple text file to create documents like blogs, papers, books etc. This blog will be generated using Quarto. Quarto takes simple text files written in <a href="">markdown</a> and converts those documents into a number of different <a href="https://quarto.org/docs/output-formats/all-formats.html">formats</a>.</p>
-<p>Quarto allows you to embed code written in <a href="https://www.r-project.org/">R</a>, <a href="https://www.python.org/">python</a>, <a href="https://julialang.org/">julia</a> and <a href="https://observablehq.com/@d3">Observable JS</a> into your documents and that code will be executable. This makes it easy to share code for analysis or teaching.</p>
+<p>It means that you can use a simple text file to create documents like blogs, papers, books etc. This blog will be generated using Quarto. Quarto takes simple text files written in <a href="https://en.wikipedia.org/wiki/Markdown">markdown</a> and converts those documents into a number of different <a href="https://quarto.org/docs/output-formats/all-formats.html">formats</a>.</p>
+<p>Quarto allows you to embed code written in <a href="https://www.r-project.org/">R</a>, <a href="https://www.python.org/">python</a>, <a href="https://julialang.org/">julia</a> and <a href="https://observablehq.com/@d3">Observable JS</a> into your documents and that code will be executable. This makes it easy to share code for analysis or teaching or reminding yourself how things work!.</p>
 <p>Below I’ll document how I set up this blog on <a href="https://pages.github.com/">Github pages</a> using Quarto.</p>
 <section id="preliminaries" class="level2">
 <h2 class="anchored" data-anchor-id="preliminaries">Preliminaries</h2>
-<p>First you’ll need to have the version control sofware <a href="https://git-scm.com/">git</a> installed on your system. If you’re not familiar with git then there’s some good teaching <a href="https://www.youtube.com/playlist?list=PL4cUxeGkcC9goXbgTDQ0n_4TBzOO0ocPR">here</a>. You’ll also need an account on <a href="">Github</a>. Github provides a free service called Github pages that allows you to host a free website.</p>
+<p>First you’ll need to have the version control sofware <a href="https://git-scm.com/">git</a> installed on your system. If you’re not familiar with git then there’s some good teaching <a href="https://www.youtube.com/playlist?list=PL4cUxeGkcC9goXbgTDQ0n_4TBzOO0ocPR">here</a>. Once you have <code>git</code> installed you have to set your identity.</p>
+<pre class="{console}"><code>git config --global user.name "Your Name"
+git config --global user.email "YourEmail@XYZ.com"</code></pre>
+<p>The email you use should be the same one you’ll use when you sign up for Github.</p>
+<p>You can also set a default branch for your code. I use <code>main</code> for this. This is where the final code for the blog will live.</p>
+<pre class="{console}"><code>git config --global init.defaultBranch main</code></pre>
+<p>You’ll also need an account on <a href="https://github.com/">Github</a>. Github provides a free service called Github pages that allows you to host a free website.</p>
+<p>You’ll also need to <a href="https://quarto.org/docs/get-started/">install Quarto</a>.</p>
 <p>Once we have git &amp; Quarto installed and a Github account ready the workflow we’ll follow here is:</p>
 <ul>
 <li>Create a blog repository on Github</li>
 <li>Copy (clone) that repository to our local computer</li>
-<li>Create a blog in the local repository using Quarto</li>
+<li>Setup the blog structure in the local repository using Quarto</li>
 <li>Create content for the blog using Quarto</li>
 <li>Push the content to the online repository</li>
-<li>Set Github pages to serve our blog</li>
 </ul>
-<p>Once we’ve done the first three steps the last three steps can be repeated as we add new blog posts.</p>
-<p>I’m using either Mac OSX or linux as an operating system &amp; we’ll be using the command line (Terminal). If you want to follow the process on Windows you’ll probably need to change a few commands used to make files or change directories from Unix commands to Windows commands. The <code>git</code> and <code>quarto</code> commands will all remain the same.</p>
-<p>First go to <a href="https://github.com/">Github</a>, create a free account and set up the various security options. Install <a href="https://git-scm.com/">git</a> on your computer. Install <a href="https://quarto.org/">Quarto</a> on your computer.</p>
+<p>Once we’ve done the first three steps the last two steps can be repeated as we add new blog posts.</p>
+<p>I’ll be using a Unix based operating system either Mac OSX or linux &amp; we’ll be using the command line. If you want to follow the process on Windows you’ll probably need to change a few commands used to create files or change directories from Unix commands to Windows commands. The <code>git</code> and <code>quarto</code> commands will all remain the same.</p>
+<p>Once you have installed git and set up your <a href="https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup">git identity</a> go to <a href="https://github.com/">Github</a>, create a free account and set up the various security options. Install <a href="https://quarto.org/docs/getting-started">Quarto</a> on your computer.</p>
 </section>
-<section id="github" class="level2">
-<h2 class="anchored" data-anchor-id="github">Github</h2>
-<p>On GitHub create a new repo named <code>your_github_username.github.io</code> replacing <code>your_github_username</code> with your actual Github username. Do not add a README or license file just now.</p>
+<section id="github-set-up" class="level2">
+<h2 class="anchored" data-anchor-id="github-set-up">Github set up</h2>
+<p>On Github create a new repo named <code>your_github_username.github.io</code> replacing <code>your_github_username</code> with your actual Github username. Do not add a README or license file just now.</p>
 <p>On your local computer change to the directory you want to use for your blog and clone the Github repo into that directory.</p>
-<pre class="console"><code>cd ~/blog_directory
-git clone https://github.com/THE_REPO_ADDRESS</code></pre>
-<p>if you’re using https or</p>
-<pre class="console"><code>cd ~/blog_directory
+<pre class="{console}"><code>cd ~/blog_directory
 git clone git@github.com:THE_REPO_ADDRESS</code></pre>
 <p>if you’re using ssh.</p>
+<pre class="{console}"><code>cd ~/blog_directory
+git clone https://github.com/THE_REPO_ADDRESS</code></pre>
+<p>if you’re using https.</p>
 <p>This will download the files on Github into the local directory. You’ll probably get a warning like:</p>
 <pre class="{console}"><code>warning: You appear to have cloned an empty repository.</code></pre>
 <p>That’s ok… you have cloned an empty repository!</p>
@@ -185,9 +191,9 @@ git clone git@github.com:THE_REPO_ADDRESS</code></pre>
 <h2 class="anchored" data-anchor-id="create-the-blog">Create the blog</h2>
 <p>There are full instructions <a href="https://quarto.org/docs/websites/website-blog.html">here</a>.</p>
 <p>Change into the local repo you just cloned.</p>
-<pre class="console"><code>cd ~/blog_directory/local_repo</code></pre>
+<pre class="{console}"><code>cd ~/blog_directory/your_github_username.github.io</code></pre>
 <p>Create a local copy of your blog by typing:</p>
-<pre class="console"><code>quarto create-project --type website:blog</code></pre>
+<pre class="{console}"><code>quarto create-project --type website:blog</code></pre>
 <p>Quarto will create several files and directories required to create the blog:</p>
 <ul>
 <li>_quarto.yml</li>
@@ -198,80 +204,133 @@ git clone git@github.com:THE_REPO_ADDRESS</code></pre>
 <li>styles.css</li>
 </ul>
 <p>Add an empty file named <code>.nojekyll</code> at the top level:</p>
-<pre class="{console}"><code>touch .nojekyll</code></pre>
-<p>This is required so that Github pages will serve our blog properly later. See the Github pages section <a href="https://quarto.org/docs/websites/publishing-websites.html">here</a>.</p>
+<pre class="{console}"><code># change directory
+cd your_github_username.github.io
+# add a file
+touch .nojekyll</code></pre>
+<p>This is required so that Github pages will serve our blog properly later. See the Github pages section <a href="https://quarto.org/docs/websites/">here</a>.</p>
 <p>We also need to set the output directory in the <code>_quarto.yml</code> file so the top of the file reads:</p>
 <pre class="{console}"><code>project:
   type: website
   output-dir: docs</code></pre>
-<p>If you want to add twitter or github or other social media details you can make edits as required.</p>
+<p>If you want to add social media details you can make edits to the <code>about.qmd</code> file (see the webpage above).</p>
 </section>
-<section id="push-blog-to-github" class="level2">
-<h2 class="anchored" data-anchor-id="push-blog-to-github">Push blog to Github</h2>
-<p>On the command line type <code>git status</code>. Git will show that all the files/directories created by Quarto are untracked.</p>
-<p>Type <code>git add .</code> to start tracking (or stage) all these files.</p>
-<p>Type <code>git commit -m "initialise blog"</code> to commit all these files to the local git repository.</p>
-<p>Now we can push all these files back up to Github:</p>
-<p><code>git push origin main</code></p>
-<p>On the GitHub page for your repo go to Settings (top right of the page) &amp; scroll down until you see the section for GitHub pages. Click on the Source (it probably says <code>None</code>) &amp; select <code>Branch: docs</code>. Keep the <code>/root</code> part as <code>/root</code>.</p>
-<p><img src="set_pages_source.png" class="img-fluid"></p>
-<p>Press save. This tells GitHub Pages to look in the main branch of the project for files to serve.</p>
+<section id="setting-git-to-track-the-blog" class="level2">
+<h2 class="anchored" data-anchor-id="setting-git-to-track-the-blog">Setting <code>git</code> to track the blog</h2>
+<p>Move into the new directory created by Quarto:</p>
+<pre class="{console}"><code>cd your_github_username.github.io</code></pre>
+<p>Type <code>git init</code>. This will tell <code>git</code> to start tracking the files in the blog directory. You can make sure this is working by typing <code>git status</code> &amp; <code>git</code> should list all the directories and files in the <code>your_github_username.github.io</code> directory. You should also see that you are on the <code>main</code> branch.</p>
 </section>
 <section id="adding-a-content-branch" class="level2">
 <h2 class="anchored" data-anchor-id="adding-a-content-branch">Adding a content branch</h2>
-<p>Git allows us to create different branches for projects we are working on. At the moment we only have one branch in our blog project - the <code>main</code> branch. For adding content etc we do not want to work on the main branch; we want the main branch to be the destination for code/posts we know we want to publish.</p>
+<p>Git allows us to create different branches for projects we are working on. At the moment we only have one branch in our blog project - the <code>main</code> branch. For adding content etc we do not want to work on the <code>main</code> branch; we want the <code>main</code> branch to be the destination for code/posts we know we want to publish.</p>
 <p>On your local machine create a new branch in the repo called e.g.&nbsp;<code>adding-content</code>.</p>
 <pre class="console"><code>git checkout -b adding-content</code></pre>
+<p>You should see a message <code>Switched to a new branch 'adding-content'</code>.</p>
 <p>As you create content you will create that content on the <code>adding-content</code> branch. Once you’re happy with that content you can <code>merge</code> the <code>adding-content</code> and <code>main</code> branches. That way you’re never going to ‘break’ the <code>main</code> branch (the stuff you will actually blog) with code/content that doesn’t work.</p>
+<p>Before we go any further we’ll push everything we have done to the <code>adding-content</code> branch on our local machine.</p>
+<pre class="{console}"><code># make sure we're on the adding-content branch
+git status
+# add all the files &amp; changes; . means add everything
+git add .
+# commit the changes to the git repo
+git commit -m "started adding-content branch"
+# check
+git status</code></pre>
+<p>You should see a message:</p>
+<pre class="{console}"><code>On branch adding-content
+nothing to commit, working tree clean</code></pre>
 </section>
 <section id="adding-content" class="level2">
 <h2 class="anchored" data-anchor-id="adding-content">Adding content</h2>
-<p>In the directory on your local machine you should now be on the <code>adding-content</code> branch &amp; you can check that with <code>git status</code>.</p>
-<p>The workflow to create content is to write in markdown and then use the tools in Quarto to render the markdown to html. If you made your blog repo as above with Quarto then Quarto will take care of adding blog posts to the index page of you blog.</p>
-<p>Create new markdown file; as you’re doing so you can check (approximately) what the page will look like using the Render button in RStudio or VS Code if you’re using either of these for your writing.</p>
+<p>The workflow to create content is to write in markdown and then use the tools in Quarto to render the markdown to html. If you made your blog repo as above with Quarto then Quarto will take care of adding blog posts to the index page of your blog.</p>
+<p>Create a new Quarto file written in markdown. As you’re doing so you can check what the page will look like using the Render button in <a href="https://posit.co/products/open-source/rstudio/">RStudio</a> or<a href="https://code.visualstudio.com/">VS Code</a> if you’re using either of these for your writing.</p>
 <p>Once you’re satisfied with the markdown file create a new folder in the <code>/posts</code> directory of your blog repo. Give the folder an informative name.</p>
-<pre class="{console}"><code>cd posts
+<pre class="{console}"><code># change to posts dir
+cd your_github.username.github.io/posts
+# create new dir to hold current content
 mkdir quarto_github_pages
-cp path/to/content.qmd /posts</code></pre>
-<p>Make sure you are in the top level directory of your blog (e.g.&nbsp;YOURNAME.github.io) and type</p>
-<pre class="console"><code>quarto preview</code></pre>
-<p>in the terminal to preview the site.</p>
-<p>If it all looks good press <code>ctrl+c</code> to stop the site being served. We can send the site to the online Github repo.</p>
+# move .qmd file to posts/new_dir
+cp path/to/content.qmd posts/quarto_github_pages</code></pre>
+<p>Now we can add this file to <code>git</code>.</p>
+<pre class="{console}"><code># check your on adding content
+git status
+# add the file
+git add posts/quarto_github_pages/content.qmd
+# commit the file &amp; add a message
+git commit -m "added first post to blog"
+# check all is well
+git status</code></pre>
 </section>
-<section id="serving-the-blog" class="level2">
-<h2 class="anchored" data-anchor-id="serving-the-blog">Serving the blog</h2>
-<p>To serve the blog we have to generate html files. We can do this with the Quarto <code>render</code> command.</p>
-<p>To make sure we do not screw up the <code>main</code> branch move back to the <code>adding-content</code> branch on your local machine.</p>
-<pre><code>git checkout adding-content</code></pre>
-<p>In the terminal run the command</p>
-<pre><code>quarto render</code></pre>
-<p>Thus will render the whole site and create a new _site directory.</p>
-<p><code>git status</code> shows untracked <code>../../_site</code></p>
-<p>Make sure that folder is tracked by git.</p>
-<pre><code>git add ../../_site
-git commit -m "useful m"
-git push origin adding-content</code></pre>
-<section id="edit-out-maybe" class="level3">
-<h3 class="anchored" data-anchor-id="edit-out-maybe">EDIT OUT MAYBE</h3>
+<section id="render-the-site" class="level2">
+<h2 class="anchored" data-anchor-id="render-the-site">Render the site</h2>
+<p>Now we have some content we can use quarto to render the actual site. Make sure you are in the top level directory of your blog (e.g.&nbsp;<code>your_github_username.github.io</code>) and type <code>quarto preview</code> to preview the site.</p>
+<p>If it all looks good press <code>ctrl+c</code> to stop the site being served.</p>
+<p>You can now render the site with <code>quarto render</code>. This will add several new files &amp; directories.</p>
+<p>Add these to the <code>adding-content</code> branch following the <code>git</code> workflow.</p>
+<pre class="{console}"><code>git status # make sure you are on adding-content branch
+git add .
+git status
+git commit -m "some useful commit message"
+git status</code></pre>
+<p>Now we’re ready to send the site to Github.</p>
 </section>
-</section>
-<section id="summary-of-process" class="level2">
-<h2 class="anchored" data-anchor-id="summary-of-process">Summary of process</h2>
-<p>The first time you do this <code>git status</code> should show the <code>docs/</code> directory as untracked and <code>posts/some_folder/some_file.qmd</code> as staged but not committed. Use <code>git add docs/</code> and then <code>git add posts/some_folder/some_file.qmd</code> to tell git to track the changes.</p>
-<p>Subsequently <code>git status</code> will only show the folder that has changed or is new in the posts directory. You need to explicitly add the folder and the files inside that folder.</p>
-<pre class="console"><code>git add posts/new_folder
-git add .</code></pre>
-<p>Use <code>git commit -m "some informative message"</code> to commit the changes.</p>
-<p>Now push the repository with the new branch up to Github.</p>
+<section id="push-blog-to-github" class="level2">
+<h2 class="anchored" data-anchor-id="push-blog-to-github">Push blog to Github</h2>
+<p>We want to push the files we have created to the <code>adding-content</code> branch online.</p>
 <pre class="{console}"><code>git push origin adding-content</code></pre>
-<p>Notice that we push to <code>adding-content</code> NOT to <code>main</code>.</p>
-<p>On GitHub there should be a pull request generated to pull the changes from <code>adding-content</code> into the <code>main</code> branch. Create the pull request, give it a meaningful message (e.g.&nbsp;‘post on quarto &amp; github pages’) and then (all going well) merge the pull request into <code>main</code> following the prompts on Github.</p>
-<p>You should now (well after a few minutes) be able to see your blog at <code>your_github_username.github.io</code>.</p>
-<p>On your local machine move back to the <code>main</code> branch.</p>
+<p>Go to <a href="https://github.com/">Github</a> and log in if you have to. You should see a message that the <code>adding-content</code> branch has had content pushed to it.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="pull_request.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Pull request</figcaption><p></p>
+</figure>
+</div>
+<p>Press the green button and follow the prompts to merge your changes to the <code>main</code> branch on Github.</p>
+<p>On the GitHub page for your repo go to Settings (top right of the page) &amp; scroll down until you see the section for GitHub pages. Click on the Source (it probably says <code>Deploy from a branch</code>) &amp; select <code>/docs</code>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="set_pages_source.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Set serve directory</figcaption><p></p>
+</figure>
+</div>
+<p>Press save. This tells GitHub Pages to look in the<code>main</code> branch of the project and in the <code>docs</code> directory for files to serve.</p>
+</section>
+<section id="syncing-online-and-local" class="level2">
+<h2 class="anchored" data-anchor-id="syncing-online-and-local">Syncing online and local</h2>
+<p>So far we have made all our changes to the local <code>adding-content</code> branch, sent these changes to the <code>adding-content</code> branch online and merged those changes with the <code>main</code> branch online. Our local <code>main</code> branch needs to be synchronised to the online <code>main</code> branch.</p>
+<p>In your local blog directory checkout your <code>main</code> branch.</p>
 <pre class="{console}"><code>git checkout main</code></pre>
-<p>Pull the contents of the main branch on Github (which you just updated) down to the local machine.</p>
+<p>Now pull the content from the online <code>main</code> branch down to your local machine.</p>
 <pre class="{console}"><code>git pull origin main</code></pre>
-<p>So far we have made sure that our online repo and our local directory and local branches all have the same content.</p>
+<p>Your local <code>main</code> branch and your online <code>main</code> branch will now be the same.</p>
+</section>
+<section id="workflow-process" class="level2">
+<h2 class="anchored" data-anchor-id="workflow-process">Workflow process</h2>
+<p>A lot of what we did above was once off. For subsequent posts we will:</p>
+<ul>
+<li>Draft content in markdown</li>
+<li>Track that content on the local <code>adding-content</code> branch</li>
+</ul>
+<pre class="{console}"><code>git checkout adding-content
+git status # make sure you're on adding-content
+git add XYZ
+git status
+git commit -m "some commit message"
+git status</code></pre>
+<ul>
+<li>Push the <code>adding-content</code> branch to Github when we’re ready to publish the page</li>
+</ul>
+<pre class="{console}"><code>git push origin adding-content</code></pre>
+<ul>
+<li>Merge the changes to the <code>main</code> branch online using a Github pull request</li>
+</ul>
+<p>Githib should automatically serve the page we created.</p>
+<ul>
+<li>Pull the finalised <code>main</code> branch from Github back to the local machine</li>
+</ul>
+<pre class="{console}"><code>git checkout main   
+git pull origin main</code></pre>
 
 
 </section>
