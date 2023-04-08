@@ -4,6 +4,8 @@ author: "Iain J Gallagher"
 date: "10/06/2022"
 image: quarto.png  
 categories: [news]
+execute: 
+  eval: false
 ---
 
 # Github Pages with Quarto
@@ -21,7 +23,6 @@ Below I'll document how I set up this blog on [Github pages](https://pages.githu
 First you'll need to have the version control sofware [git](https://git-scm.com/) installed on your system. If you're not familiar with git then there's some good teaching [here](https://www.youtube.com/playlist?list=PL4cUxeGkcC9goXbgTDQ0n_4TBzOO0ocPR). Once you have `git` installed you have to set your identity.
 
 ```{console}
-#| eval: false
 git config --global user.name "Your Name"
 git config --global user.email "YourEmail@XYZ.com"
 ```
@@ -31,7 +32,6 @@ The email you use should be the same one you'll use when you sign up for Github.
 You can also set a default branch for your code. I use `main` for this. This is where the final code for the blog will live.
 
 ```{console}
-#| eval: false
 git config --global init.defaultBranch main
 ```
 
@@ -46,22 +46,20 @@ Once we have git & Quarto installed and a Github account ready the workflow we'l
 * Setup the blog structure in the local repository using Quarto
 * Create content for the blog using Quarto
 * Push the content to the online repository
-* Set Github pages to serve our blog
 
-Once we've done the first three steps the last three steps can be repeated as we add new blog posts.
+Once we've done the first three steps the last two steps can be repeated as we add new blog posts.
 
 I'll be using a Unix based operating system either Mac OSX or linux & we'll be using the command line. If you want to follow the process on Windows you'll probably need to change a few commands used to create files or change directories from Unix commands to Windows commands. The `git` and `quarto` commands will all remain the same.
 
 Once you have installed git and set up your [git identity](https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup) go to [Github](https://github.com/), create a free account and set up the various security options. Install [Quarto](https://quarto.org/docs/getting-started) on your computer.
 
-## Github
+## Github set up
 
-On GitHub create a new repo named `your_github_username.github.io` replacing `your_github_username` with your actual Github username. Do not add a README or license file just now. 
+On Github create a new repo named `your_github_username.github.io` replacing `your_github_username` with your actual Github username. Do not add a README or license file just now. 
 
 On your local computer change to the directory you want to use for your blog and clone the Github repo into that directory.
 
 ```{console}
-#| eval: false
 cd ~/blog_directory
 git clone git@github.com:THE_REPO_ADDRESS
 ```
@@ -69,7 +67,6 @@ git clone git@github.com:THE_REPO_ADDRESS
 if you're using ssh.
 
 ```{console}
-#| eval: false
 cd ~/blog_directory
 git clone https://github.com/THE_REPO_ADDRESS
 ```
@@ -79,7 +76,6 @@ if you're using https.
 This will download the files on Github into the local directory. You'll probably get a warning like:
 
 ```{console}
-#| eval: false
 warning: You appear to have cloned an empty repository.
 ```
 
@@ -92,14 +88,12 @@ There are full instructions [here](https://quarto.org/docs/websites/website-blog
 Change into the local repo you just cloned. 
 
 ```{console}
-#| eval: false
 cd ~/blog_directory/your_github_username.github.io
 ```
 
 Create a local copy of your blog by typing:
 
 ```{console}
-#| eval: false
 quarto create-project --type website:blog
 ```
 
@@ -115,7 +109,7 @@ Quarto will create several files and directories required to create the blog:
 Add an empty file named `.nojekyll` at the top level:
 
 ```{console}
-#| eval: false
+# change directory
 cd your_github_username.github.io
 # add a file
 touch .nojekyll
@@ -126,7 +120,6 @@ This is required so that Github pages will serve our blog properly later. See th
 We also need to set the output directory in the `_quarto.yml` file so the top of the file reads:
 
 ```{console}
-#| eval: false
 project:
   type: website
   output-dir: docs
@@ -139,15 +132,14 @@ If you want to add social media details you can make edits to the `about.qmd` fi
 Move into the new directory created by Quarto:
 
 ```{console}
-#| eval: false
 cd your_github_username.github.io
 ```
 
-Type `git init`. This will tell git to start tracking the files in the blog directory. You can make sure this is working by typing `git status` & `git` should list all the directories and files in the `your_github_username.github.io` directory. You should also see that you are on the `main` branch.
+Type `git init`. This will tell `git` to start tracking the files in the blog directory. You can make sure this is working by typing `git status` & `git` should list all the directories and files in the `your_github_username.github.io` directory. You should also see that you are on the `main` branch.
 
 ## Adding a content branch
 
-Git allows us to create different branches for projects we are working on. At the moment we only have one branch in our blog project - the `main` branch. For adding content etc we do not want to work on the main branch; we want the main branch to be the destination for code/posts we know we want to publish.
+Git allows us to create different branches for projects we are working on. At the moment we only have one branch in our blog project - the `main` branch. For adding content etc we do not want to work on the `main` branch; we want the `main` branch to be the destination for code/posts we know we want to publish.
 
 On your local machine create a new branch in the repo called e.g. `adding-content`.
 
@@ -162,7 +154,6 @@ As you create content you will create that content on the `adding-content` branc
 Before we go any further we'll push everything we have done to the `adding-content` branch on our local machine.
 
 ```{console}
-#| eval: false 
 # make sure we're on the adding-content branch
 git status
 # add all the files & changes; . means add everything
@@ -176,7 +167,6 @@ git status
 You should see a message:
 
 ```{console}
-#| eval: false
 On branch adding-content
 nothing to commit, working tree clean
 ```
@@ -185,24 +175,22 @@ nothing to commit, working tree clean
 
 The workflow to create content is to write in markdown and then use the tools in Quarto to render the markdown to html. If you made your blog repo as above with Quarto then Quarto will take care of adding blog posts to the index page of your blog. 
 
-Create new Quarto file; as you're doing so you can check (approximately) what the page will look like using the Render button in RStudio or VS Code if you're using either of these for your writing.
+Create a new Quarto file written in markdown. As you're doing so you can check what the page will look like using the Render button in [RStudio](https://posit.co/products/open-source/rstudio/) or[VS Code](https://code.visualstudio.com/) if you're using either of these for your writing.
 
 Once you're satisfied with the markdown file create a new folder in the `/posts` directory of your blog repo. Give the folder an informative name.
 
 ```{console}
-#| eval: false
 # change to posts dir
 cd your_github.username.github.io/posts
 # create new dir to hold current content
 mkdir quarto_github_pages
-# move .qmd file to 
+# move .qmd file to posts/new_dir
 cp path/to/content.qmd posts/quarto_github_pages
 ```
 
 Now we can add this file to `git`.
 
 ```{console}
-#| eval: false
 # check your on adding content
 git status
 # add the file
@@ -215,20 +203,21 @@ git status
 
 ## Render the site
 
-Make sure you are in the top level directory of your blog (e.g. `your_github_username.github.io`) and type
-
-```{console}
-#| eval: false
-quarto preview
-```
-
-in the terminal to preview the site.
+Now we have some content we can use quarto to render the actual site. Make sure you are in the top level directory of your blog (e.g. `your_github_username.github.io`) and type `quarto preview` to preview the site.
 
 If it all looks good press `ctrl+c` to stop the site being served. 
 
 You can now render the site with `quarto render`. This will add several new files & directories. 
 
-Add these to the `adding-content` branch following the workflow above.
+Add these to the `adding-content` branch following the `git` workflow.
+
+```{console}
+git status # make sure you are on adding-content branch
+git add .
+git status
+git commit -m "some useful commit message"
+git status
+```
 
 Now we're ready to send the site to Github.
 
@@ -237,38 +226,35 @@ Now we're ready to send the site to Github.
 We want to push the files we have created to the `adding-content` branch online.
 
 ```{console}
-#| eval: false
 git push origin adding-content
 ```
 
-Go to github.com and log in if you have to. You should see a message that the `adding-content` branch has had content pushed to it.
+Go to [Github](https://github.com/) and log in if you have to. You should see a message that the `adding-content` branch has had content pushed to it.
 
-[!Pull Request](pull_request.png)
+![Pull request](pull_request.png)
 
-Press the green button and follow the prmopts to merge your changes to the `main` branch on Github.
+Press the green button and follow the prompts to merge your changes to the `main` branch on Github.
 
 On the GitHub page for your repo go to Settings (top right of the page) & scroll down until you see the section for GitHub pages. Click on the Source (it probably says `Deploy from a branch`) & select `/docs`.
 
-![](set_pages_source.png)
+![Set serve directory](set_pages_source.png)
 
 
 Press save. This tells GitHub Pages to look in the` main` branch of the project and in the `docs` directory for files to serve.
 
 ## Syncing online and local
 
-So far we have made all our changes to the local `adding-content` branch, sent these chnages to the `adding-content` branch online and merged those changes with the `main` branch online. Our local `main` branch needs to be synchronised to the online `main` branch.
+So far we have made all our changes to the local `adding-content` branch, sent these changes to the `adding-content` branch online and merged those changes with the `main` branch online. Our local `main` branch needs to be synchronised to the online `main` branch.
 
-In your blog directory checlout your `main` branch.
+In your local blog directory checkout your `main` branch.
 
 ```{console}
-#| eval: false
 git checkout main
 ```
 
 Now pull the content from the online `main` branch down to your local machine.
 
 ```{console}
-#| eval: false
 git pull origin main
 ```
 
@@ -276,28 +262,33 @@ Your local `main` branch and your online `main` branch will now be the same.
 
 ## Workflow process
 
-For subsequent posts we will:
+A lot of what we did above was once off. For subsequent posts we will:
 
 * Draft content in markdown
-* Track that content on the `adding-content` branch
+* Track that content on the local `adding-content` branch
 
 ```{console}
-#| eval: false
+git checkout adding-content
+git status # make sure you're on adding-content
 git add XYZ
+git status
 git commit -m "some commit message"
+git status
 ```
 
-* Push the `adding-content` branch to Github 
+* Push the `adding-content` branch to Github when we're ready to publish the page
+
 ```{console}
-#| eval: false
 git push origin adding-content
 ```
 
 * Merge the changes to the `main` branch online using a Github pull request
+
+Githib should automatically serve the page we created.
+
 * Pull the finalised `main` branch from Github back to the local machine
 
 ```{console}
-#| eval: false
 git checkout main   
 git pull origin main
 ```
