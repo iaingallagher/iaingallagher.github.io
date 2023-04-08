@@ -6,14 +6,12 @@ about:
   links:
     - icon: twitter
       text: Twitter
-      href: https://twitter.com
+      href: https://twitter.com/iainjgallagher
     - icon: linkedin
-      text: LinkedIn
-      href: https://linkedin.com
     - icon: github
       text: Github
-      href: https://github.com
+      href: https://github.com/iaingallagher
 
 ---
 
-About this blog
+This is a public service announcement!
