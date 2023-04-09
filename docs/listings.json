@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/hello_data_julia/hello_world_data_julia.html",
       "/posts/hello_data_python/hello_world_data_python.html",
       "/posts/hello_data_r/hello_world_data_R.html",
       "/posts/quarto_github_pages/blog_process.html",
