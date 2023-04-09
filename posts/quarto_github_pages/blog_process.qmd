@@ -1,7 +1,7 @@
 ---
 title: "Quarto with Github Pages"
 author: "Iain J Gallagher"
-date: "10/06/2022"
+date: 06/10/2022
 image: quarto.png  
 categories: [news]
 execute: 

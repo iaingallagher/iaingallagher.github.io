@@ -2,8 +2,8 @@
   {
     "listing": "/index.html",
     "items": [
-      "/posts/quarto_github_pages/blog_process.html",
       "/posts/hello_data_r/hello_world_data_R.html",
+      "/posts/quarto_github_pages/blog_process.html",
       "/posts/welcome/index.html"
     ]
   }
