@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/bayes_two_grid_approx/Bayes_part_2_grid_estimation.html",
       "/posts/bayes_one_bayes_rule/bayes_rule.html",
       "/posts/hello_data_julia/hello_world_data_julia.html",
       "/posts/hello_data_python/hello_world_data_python.html",
