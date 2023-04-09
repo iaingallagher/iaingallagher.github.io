@@ -7,8 +7,4 @@ freeze: true
 # Enable banner style title blocks
 title-block-banner: true
 
-# render specific posts
 
-project:
-  render:
-    - hello_world_data_R.qmd
