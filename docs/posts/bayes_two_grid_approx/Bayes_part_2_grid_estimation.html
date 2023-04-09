@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.313">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2023-02-08">
+
+<title>iaingallagher.github.io - Bayes rule &amp; distributions; Inference with grid approximation</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">iaingallagher.github.io</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com" rel="" target=""><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Bayes rule &amp; distributions; Inference with grid approximation</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">R</div>
+                <div class="quarto-category">Bayes</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">February 8, 2023</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block page-columns page-full" id="quarto-document-content">
+
+
+
+
+<section id="introduction" class="level1 page-columns page-full">
+<h1>Introduction</h1>
+<p>In the <a href="https://iaingallagher.github.io/posts/1_bayes_rule/bayes_rule.html">first post</a> in this series I introduced some basic probability rules and used them to derive Bayes rule.</p>
+<p><span class="math display">\[
+P(B|A) = \frac{P(A|B)P(B)}{P(A)}
+\]</span></p>
+<p>Bayes rule allows us to ‘invert’ conditional probabilities &amp; this is surprisingly useful!</p>
+<p>In the first post I used Bayes rule to calculate the probability of a being on a particular degree programme <em>given</em> you earned a first class mark and also the probability of actually having a disease after testing positive for the disease. These examples both used single probability values but Bayes rule really shines when we apply it to <em>entire probability distributions</em>. This can be harder to wrap your head around. In this post we’ll use a technique called grid approximation to illustrate how all the moving parts fit together. We’ll see how Bayes rule allows us to use an entire probability distribution to test multiple hypotheses together.</p>
+
+<div class="no-row-height column-margin column-container"><section id="what-is-a-probability-distribution" class="level4">
+<h4 class="anchored" data-anchor-id="what-is-a-probability-distribution">What is a probability distribution?</h4>
+<p>A probability distribution is the mapping of <em>disjoint</em> outcomes in an event space to the probability of those outcomes.</p>
+<p>There are three rules for constructing probability distributions:</p>
+<ul>
+<li>The outcomes listed must be disjoint i.e.&nbsp;they cannot occur at the same time</li>
+<li>Each probability must be between 0 and 1</li>
+<li>The total probability in the event space and therefore in the distribution must sum up to 1</li>
+</ul>
+<p>Over the years statisticians have developed many <em>idealised</em> probability distributions for different kinds of outcome space. These distributions have specific mathematical formulae. They are idealised in that they describe the probability of outcomes well enough to be useful but they are not exact models of the real world. The well known Normal distribution is an example.</p>
+<p>If probability distributions are unfamiliar to you and you want more detail then Chapter 2 of the <a href="https://www.openintro.org/book/os/">OpenIntro Statistics</a> is a good place to start.</p>
+</section></div><section id="why-would-we-want-to-use-a-bayesian-approach-for-inference" class="level2">
+<h2 class="anchored" data-anchor-id="why-would-we-want-to-use-a-bayesian-approach-for-inference">Why would we want to use a Bayesian approach for inference?</h2>
+<p>A key difference between the Bayesian and NHST/frequentist approaches to inference centers on the philosophical stance around probability. For frequentists ‘probability’ of an outcome is defined as the number of times that outcome is seen in a long run of ‘experiments’. The Bayesian stance views probability as something more subjective; we define probability in terms of our expectation based on experience &amp; knowledge about the world; probability can be interpreted as the ‘plausibility’ of an outcome.</p>
+<p>One of the key differences this makes to inference (which is just educated guessing) is that Bayesians can easily incorporate <em>prior knowledge</em>. Incorporating prior knowledge should be part of principled scientific inference; we should build on what went before. However incorporating prior knowledge is hard for frequentists. For Bayesians the probability of one off events like life on Mars is easy; we just assign this some prior probability then collect data and ‘do’ Bayes! For frequentists the probability of life on Mars is difficult to define. What does it mean to have a frequentist infinity of Mars (what would the plural be? Marses? Marsii? 😕) to examine for the presence of life?</p>
+<p>The dominant statistical paradigm in use is frequentist null hypothesis significance testing (NHST). For analysis of scientific studies in e.g.&nbsp;the biomedical field where I mostly work, this system relies on an <em>assumption</em> of a long run of study repeats (the frequentist part). But study repeats are rarely done and when they are the results are usually disappointing for statistical and other reasons (<span class="citation" data-cites="amaralReproducibilityExpectLess2021">Amaral and Neves (<a href="#ref-amaralReproducibilityExpectLess2021" role="doc-biblioref">2021</a>)</span>, <span class="citation" data-cites="erringtonChallengesAssessingReplicability2021">Errington et al. (<a href="#ref-erringtonChallengesAssessingReplicability2021" role="doc-biblioref">2021</a>)</span>, <span class="citation" data-cites="opensciencecollaborationEstimatingReproducibilityPsychological2015">OPEN SCIENCE COLLABORATION (<a href="#ref-opensciencecollaborationEstimatingReproducibilityPsychological2015" role="doc-biblioref">2015</a>)</span>). NHST only examines the probability of the data you have (or more extreme data) under a <em>null</em> hypothesis. The frequentist procedures use a <em>p-value</em> to inform on this null hypothesis. Notably the p-value is a conditional probability; it is the probability of the <em>data you have or data more extreme</em> <strong>given</strong> the null hypothesis is true. In maths:</p>
+<p><span class="math display">\[
+p\mbox{-}value = P(data|H_0)
+\]</span></p>
+<p>If we <em>assume</em> the null hypothesis is <em>true</em> then a low p-value counts as ‘some evidence’ against the null… but how much evidence? The p-value tells us the probability of data <strong>not</strong> the probability of the null hypothesis; in fact we <strong>assume the null is true</strong> so the probability of the null (or ‘chance alone’ irrespective of the p-value) is 100% under this assumption!</p>
+<p>This probability - <span class="math inline">\(P(data|H_0)\)</span> - is not usually the probability we want. We usually want the ‘inverse conditional’:</p>
+<p><span class="math display">\[
+P(H_0|data)
+\]</span></p>
+<p>That is, the probability of the null hypothesis <em>given</em> the data. NHST does not give us this.</p>
+<p>There are no shortage of other criticisms of the NHST system. For example NHST tells you nothing about any <em>alternative</em> hypotheses. We’ll see below onw way a Bayesian approach can deal with this.</p>
+<p>Finally NHST (as usually used) is a combination of the Fisherian approach (significance testing) and the Neyman-Pearson (hypothesis testing) approaches to inference. These systems are <em>not</em> compatible and whilst each of these alone is coherent the hybrid that is NHST is not coherent.</p>
+<blockquote class="blockquote">
+<p>Confusion surrounding the reporting and interpretation of results of classical statistical tests is widespread among applied researchers, most of whom <strong>erroneously</strong> [my emphasis] believe that such tests are prescribed by a single coherent theory of statistical inference… In particular, there is a widespread failure to appreciate the <strong>incompatibility</strong> [my emphasis] of Fisher’s evidential p-value with the Type I error rate, <span class="math inline">\(\alpha\)</span>, of Neyman-Pearson statistical orthodoxy.</p>
+</blockquote>
+<p><span class="citation" data-cites="hubbard2003">(<a href="#ref-hubbard2003" role="doc-biblioref">Hubbard and Bayarri 2003</a>)</span></p>
+<p>All that is not to say frequentist statistics is not useful - it’s just sensible to know what you’re getting for your money.</p>
+<p>Bayes rule is a straightforward combination of basic probability rules and as such inference based on Bayes rule is the result of a coherent system. If you want to read more about the incoherence in NHST then two accessible accounts are given by <span class="citation" data-cites="cohen1994">Cohen (<a href="#ref-cohen1994" role="doc-biblioref">1994</a>)</span> &amp; <span class="citation" data-cites="hubbard2003">Hubbard and Bayarri (<a href="#ref-hubbard2003" role="doc-biblioref">2003</a>)</span>.</p>
+<p>Anyway philosophical rant aside let’s look at how Bayes rule can help us.</p>
+<section id="bayes-rule-for-hypotheses" class="level3">
+<h3 class="anchored" data-anchor-id="bayes-rule-for-hypotheses">Bayes rule for hypotheses</h3>
+<p>We can re-state Bayes rule in terms of data and models - models are just ‘events’ in some probability space.</p>
+<p><span class="math display">\[
+P(Model|Data) = \frac{P(Data|Model)P(Model)}{P(Data)}
+\]</span></p>
+<p>We have some model under consideration (e.g.&nbsp;a ‘null’ hypothesis) and we can define the prior probability of that model. This is the <span class="math inline">\(P(Model)\)</span> part. Conceptually this is the plausibility of the model expressed as a probability <em>before</em> we see any data.</p>
+<p>We combine the prior with the <em>likelihood</em> - <span class="math inline">\(P(Data|Model)\)</span> - of the <span class="math inline">\(Data\)</span> under each possible parameter in the the <span class="math inline">\(Model\)</span>. The product in the numerator is then normalized to a probability by taking the probability of the <span class="math inline">\(Data\)</span> over all possible model parameters in the prior. This sum of products - <span class="math inline">\(P(Data)\)</span> - is often called the <em>evidence</em>. The calculation on the right hand side then gives us the probability of our <span class="math inline">\(Model\)</span> given the <span class="math inline">\(Data\)</span> - <span class="math inline">\(P(Model|Data)\)</span> - the posterior.</p>
+</section>
+</section>
+<section id="estimating-a-proportion" class="level2">
+<h2 class="anchored" data-anchor-id="estimating-a-proportion">Estimating a proportion</h2>
+<p>All of the above is pretty abstract and will be easier with an example. Suppose I <em>believe</em> that 10% of students in the <a href="https://iaingallagher.github.io/posts/1_bayes_rule/bayes_rule.html">previous post</a> are capable of scoring 70% or more in an exam (in the UK system this is a first class mark). My belief in 10% is not absolute though… I might consider 5%, 10%, 15% &amp; 20% to be plausible. A Bayesian approach allows me to examine each of these hypotheses (<span class="math inline">\(models\)</span>) given some <span class="math inline">\(data\)</span>.</p>
+<p>Before we go down the Bayesian route though let’s take a look at the usual frequentist NHST approach to this question. If you want to follow along the data for this analysis are <a href="https://github.com/iaingallagher/iaingallagher.github.io/blob/main/data/c5_firsts.csv">here</a>.</p>
+<section id="nhst-approach-to-estimating-a-proportion" class="level3">
+<h3 class="anchored" data-anchor-id="nhst-approach-to-estimating-a-proportion">NHST approach to estimating a proportion</h3>
+<p>The marks for 2015 show that 8 out of 104 students got a mark of 70% or more, a proportion of 7.7%. How can I compare this data to my belief that 10% of students are capable of a mark of 70% or more?</p>
+<p>The outcome here is binary i.e.&nbsp;each student can score 70% or more (a ‘success’) or less than 70% (a ‘failure’; no judgement - ‘success’&amp; ‘failure’ are just conventional labels for binary outcomes). We have some number of trials (each student represents a trial) and some number of successes. In a situation like this we can use the binomial distribution to calculate a p-value from the data we have. In R the <code>binom.test()</code> function does the heavy lifting. We enter the number of ‘successes’ (8), the total number of trials (104) and the probability of success under the null hypothesis. Since I believe 10% of students are capable of a first class mark the probability of success under the null hypothesis here is 0.1.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># binom.test(successes, total trials, prob success)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="dv">8</span>, <span class="dv">104</span>, <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Exact binomial test
+
+data:  8 and 104
+number of successes = 8, number of trials = 104, p-value = 0.5154
+alternative hypothesis: true probability of success is not equal to 0.1
+95 percent confidence interval:
+ 0.03379462 0.14595163
+sample estimates:
+probability of success 
+            0.07692308 </code></pre>
+</div>
+</div>
+<p>The interpretation here is that <em>if the true probability of success is 10%</em> then the probability of 8 succsses out of 104 trials (7.7%) or a more extreme proportion is about 51% (the p-value). Conventionally we would <em>fail to reject the null</em> (note this is <em>not</em> the same as accept the null) at conventional 5% significance. I might tentatively conclude that the data somewhat support my guess that 10% of students are capable of a first class mark.</p>
+<p>This tells me something about an assumed proportion of 10% but what if I want to test other possible proportions like 5%, 15% or 20%? I could do more binomial tests but then I run into multiple comparison problems <span class="citation" data-cites="tukey1991">(<a href="#ref-tukey1991" role="doc-biblioref">Tukey 1991</a>)</span> because I want to control the type 1 error rate at 5%. Note also I have no power calculation here so I can’t actually set a number of observations to control the type 1 error rate. So what does my p-value mean in a strict NHST sense? Note that post-hoc power is not (ever) the right thing to do e.g. <span class="citation" data-cites="hoenig2001">(<a href="#ref-hoenig2001" role="doc-biblioref">Hoenig and Heisey 2001</a>)</span>, <span class="citation" data-cites="gelman2019">(<a href="#ref-gelman2019" role="doc-biblioref">Gelman 2019</a>)</span>.</p>
+</section>
+</section>
+<section id="bayesian-inference-with-grid-approximation" class="level2">
+<h2 class="anchored" data-anchor-id="bayesian-inference-with-grid-approximation">Bayesian inference with grid approximation</h2>
+<p>Let’s move on to a Bayesian analysis. I’ll use a simple grid with values representing each of four plausible proportions (5%, 10%, 15% &amp; 20%) and use Bayes rule to update my belief in each proposed proportion in light of the data I have. In order to use Bayes rule I first have to set some prior belief over each of the proposed proportions. I can create probabilities for each proportion by first weighting each proportion arbitrarily for plausibility.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set 'plausibility' on proportions of 5, 10, 15 &amp; 20%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>props <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.05</span>, <span class="fl">0.2</span>, <span class="fl">0.05</span>) <span class="co"># my proportions; start, stop, step</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>wgts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">8</span>, <span class="dv">3</span>, <span class="fl">0.5</span>) <span class="co"># arbitrary plausibility weight for each proportion; most on 0.1</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(props, wgts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     props wgts
+[1,]  0.05  4.0
+[2,]  0.10  8.0
+[3,]  0.15  3.0
+[4,]  0.20  0.5</code></pre>
+</div>
+</div>
+<p>Now I can divide each individual weight through by the total weight thus scaling the weights to lie in the interval [0,1] and also making sure they sum to 1. In effect I have created a probability distribution.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>priors <span class="ot">&lt;-</span> <span class="fu">round</span>(wgts<span class="sc">/</span><span class="fu">sum</span>(wgts),<span class="dv">2</span>) <span class="co"># convert weights to probabilities</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(props, wgts, priors)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     props wgts priors
+[1,]  0.05  4.0   0.26
+[2,]  0.10  8.0   0.52
+[3,]  0.15  3.0   0.19
+[4,]  0.20  0.5   0.03</code></pre>
+</div>
+</div>
+<p>The <code>priors</code> column in the above represents the plausibility of each proportion. Note that most of my prior probability is on 10%. I don’t place much probability on 20%; first class marks should be hard to get otherwise they’re rather meaningless!</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="special.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">The Wisdom of Buddy Pine</figcaption><p></p>
+</figure>
+</div>
+<p>These discrete probabilities make a probability distribution.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(props, priors, <span class="at">type=</span><span class="st">'h'</span>, <span class="at">xlab =</span> <span class="st">'Proportion'</span>, <span class="at">ylab=</span><span class="st">'Probability'</span>, <span class="at">main =</span> <span class="st">'Prior distribution'</span>, <span class="at">lwd=</span><span class="dv">4</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(props, priors, <span class="at">pch=</span><span class="dv">16</span>, <span class="at">cex=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Bayes_part_2_grid_estimation_files/figure-html/prior probability distribution-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">The prior probability distribution</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As before the marks for 2015 show that 8 out of 104 students achieved a mark of 70% or more, a proportion of 7.7%. How should this information change my belief about each of the proportions defined above?</p>
+<p>I can use Bayes rule to calculate this.</p>
+<p><span class="math display">\[
+P(\theta | D) = \frac{P(D | \theta)P(\theta)}{P(D)}
+\]</span></p>
+<p>Here <span class="math inline">\(\theta\)</span> (the Greek letter theta) is my proportion (5%, 10%, 15% &amp; 20%) and <span class="math inline">\(D\)</span> is my data (0.077). Bayes rule gives me a route to get from the probability of some data given a parameter - <span class="math inline">\(P(D | \theta)\)</span> - to the probability of the parameter given some data - <span class="math inline">\(P(\theta | D)\)</span>.</p>
+<p>I will set up 4 hypotheses:</p>
+<ul>
+<li><span class="math inline">\(H_1: \theta = 0.05\)</span>. My prior probability = 0.26</li>
+<li><span class="math inline">\(H_2: \theta = 0.10\)</span>. My prior probability = 0.52</li>
+<li><span class="math inline">\(H_3: \theta = 0.15\)</span>. My prior probability = 0.19</li>
+<li><span class="math inline">\(H_3: \theta = 0.20\)</span>. My prior probability = 0.03</li>
+</ul>
+<p>To get the posterior probability for each of these I need to calculate <span class="math inline">\(P(D|\theta)\)</span> - the likelihood - for each hypothesis i.e.&nbsp;I need to calculate the likelihood of seeing 8/104 people get a mark of 70% or more given each plausible proportion - 5%, 10%, 15% or 20%.</p>
+<p>The binomial distribution allows me to calculate these likelihoods. The binomial distribution gives me the probability of getting <span class="math inline">\(s\)</span> successes in <span class="math inline">\(n\)</span> trials given some probability, <span class="math inline">\(p\)</span> of success.</p>
+<p>The formula for the binomial probability distribution is:</p>
+<p><span class="math display">\[
+P(s) = {n \choose s}\theta^s(1-\theta)^{n-s}
+\]</span></p>
+<p>The <span class="math inline">\({n\choose s}\)</span> part is called the binomial coefficient and is calculated by <span class="math inline">\(\frac{n!}{s!(n-s)!}\)</span>.</p>
+<p>The <span class="math inline">\(!\)</span> in <span class="math inline">\(n!\)</span> represents the <em>factorial</em> function:<span class="math inline">\(n \times n-1 \times n-2 \times ... \times 1\)</span>.</p>
+<p>Plugging in the numbers for the first hypothesis (<span class="math inline">\(H_1: \theta = 0.05\)</span>) we get:</p>
+<p><span class="math display">\[
+P(8) = {104\choose 8}0.05^8(1-0.05)^{96} = 0.073
+\]</span></p>
+<p>In R I can use the <code>dbinom()</code> function to calculate the likelihoods:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># binomial prob for 8 successes out of 104 trials with prob s = 0.05</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dbinom</span>(<span class="dv">8</span>, <span class="dv">104</span>, <span class="fl">0.05</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.07313592</code></pre>
+</div>
+</div>
+<p>So the likelihood of getting 8 successes out of 104 trials if the ‘true’ probability of success is 5% is 0.073 (or 7.3%).</p>
+<p>In the code below I use the <code>dbinom()</code> function to quickly calculate the likelihood of the data for each hypothesis.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calc all likelihoods</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>like_vec <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(<span class="dv">8</span>, <span class="dv">104</span>, props) <span class="sc">|&gt;</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">4</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># plot likelihoods</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(props, like_vec, <span class="at">type=</span><span class="st">'h'</span>, <span class="at">xlab =</span> <span class="st">'Proportion'</span>, <span class="at">ylab=</span><span class="st">'Likelihood'</span>, <span class="at">lwd=</span><span class="dv">4</span>, <span class="at">main =</span> <span class="st">'Likelihoods'</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(props, like_vec, <span class="at">pch=</span><span class="dv">16</span>, <span class="at">cex=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Bayes_part_2_grid_estimation_files/figure-html/calculate likelihood for each hypothetical proportion-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">The likelihoods</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Let’s start laying out the different components in a table.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bayes box table</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>bayes_tab <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">theta =</span> props, <span class="at">prior =</span> priors, <span class="at">likelihood =</span> <span class="fu">round</span>(like_vec,<span class="dv">4</span>))</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(bayes_tab, <span class="at">caption =</span> <span class="st">"Table 1. Priors and likelihoods for different proportions."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Table 1. Priors and likelihoods for different proportions.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">theta</th>
+<th style="text-align: right;">prior</th>
+<th style="text-align: right;">likelihood</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">0.0731</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">0.52</td>
+<td style="text-align: right;">0.1043</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0.15</td>
+<td style="text-align: right;">0.19</td>
+<td style="text-align: right;">0.0111</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.20</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">0.0003</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Now we have to calculate the product of the likelihood and the prior. This is the numerator of Bayes theorem - <span class="math inline">\(P(D|\theta)P(\theta)\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calc Bayes numerators</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>like_x_prior <span class="ot">&lt;-</span> like_vec <span class="sc">*</span> priors</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>bayes_tab<span class="sc">$</span>like_x_prior <span class="ot">&lt;-</span> <span class="fu">round</span>(like_x_prior, <span class="dv">4</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(bayes_tab, <span class="at">caption =</span> <span class="st">"Table 2. Priors, likelihoods and their product for different proportions."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Table 2. Priors, likelihoods and their product for different proportions.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">theta</th>
+<th style="text-align: right;">prior</th>
+<th style="text-align: right;">likelihood</th>
+<th style="text-align: right;">like_x_prior</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">0.0731</td>
+<td style="text-align: right;">0.0190</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">0.52</td>
+<td style="text-align: right;">0.1043</td>
+<td style="text-align: right;">0.0542</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0.15</td>
+<td style="text-align: right;">0.19</td>
+<td style="text-align: right;">0.0111</td>
+<td style="text-align: right;">0.0021</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.20</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">0.0003</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Finally we need to calculate the denominator for Bayes rule i.e.&nbsp;<span class="math inline">\(P(D)\)</span>. To do this we sum the likelihood and prior products we have calculated i.e.</p>
+<p><span class="math inline">\(P(D) = \Sigma_1^i {P(D|\theta)_i P(\theta)_i}\)</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calc Bayes denominator (evidence)</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>denom <span class="ot">&lt;-</span> <span class="fu">sum</span>(bayes_tab<span class="sc">$</span>like_x_prior) <span class="sc">|&gt;</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>With all these parts in place we can calculate the posterior distribution i.e.&nbsp;the products divided by the evidence.</p>
+<p><span class="math display">\[P(\theta | D) = \frac{P(D | \theta)P(\theta)}{P(D)}\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calc posteriors</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> bayes_tab<span class="sc">$</span>like_x_prior<span class="sc">/</span>denom <span class="sc">|&gt;</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">4</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># add posterior probs to the table</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>bayes_tab<span class="sc">$</span>post <span class="ot">&lt;-</span> <span class="fu">round</span>(post, <span class="dv">4</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(bayes_tab, <span class="at">caption =</span> <span class="st">"Table 3. Priors, likelihoods, their product and posterior probabilities for different proportions."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Table 3. Priors, likelihoods, their product and posterior probabilities for different proportions.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">theta</th>
+<th style="text-align: right;">prior</th>
+<th style="text-align: right;">likelihood</th>
+<th style="text-align: right;">like_x_prior</th>
+<th style="text-align: right;">post</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">0.0731</td>
+<td style="text-align: right;">0.0190</td>
+<td style="text-align: right;">0.2533</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">0.52</td>
+<td style="text-align: right;">0.1043</td>
+<td style="text-align: right;">0.0542</td>
+<td style="text-align: right;">0.7227</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0.15</td>
+<td style="text-align: right;">0.19</td>
+<td style="text-align: right;">0.0111</td>
+<td style="text-align: right;">0.0021</td>
+<td style="text-align: right;">0.0280</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.20</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">0.0003</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>We can plot the posterior.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the posteriors</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(bayes_tab<span class="sc">$</span>theta, bayes_tab<span class="sc">$</span>post, <span class="at">type=</span><span class="st">'h'</span>, <span class="at">xlab=</span><span class="st">'Proportion'</span>, <span class="at">ylab=</span><span class="st">'Posterior Probability'</span>, <span class="at">main =</span> <span class="st">'Posterior distribution'</span>, <span class="at">lwd=</span><span class="dv">4</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(bayes_tab<span class="sc">$</span>theta, bayes_tab<span class="sc">$</span>post, <span class="at">pch=</span><span class="dv">16</span>, <span class="at">cex=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Bayes_part_2_grid_estimation_files/figure-html/Posterior distribution plot-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">The posterior distribution</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The probability of 10% of students achieving 70% or more on the module has gone from 52% before seeing data to 72% after seeing the data for 2015 (8 out of 104 students). So that’s good - these results strengthen my belief that 10% of students will get 70% or more.</p>
+<p>Note that unlike the NHST approach I was able to examine 4 hypotheses at the same time. The Bayesian approach gives me a richer inferential view of the results of my study. Whilst the data supports my belief in 10% I wouldn’t be surprised to see a proportion of only 5% (25% probability according to this analysis) but I’d be more surprised to see 15% (2.8% probability according to this analysis). This is a more considered conclusion compared to the usual dichotomous (and wrong) decision taken based on a non-significant p-value of ‘no effect’.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="pics/Bayes_parts_grids.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Relationship between prior, likelihood and posterior in a Bayesian analysis.</figcaption><p></p>
+</figure>
+</div>
+<p>The figure above shows how the posterior distribution is constructed in a Bayesian analysis. The posterior is the prior weighted by the likelihood (the <span class="math inline">\(\propto\)</span> symbol means “proportional to” - here it just means we’re ignoring the denominator). The grid approach is useful for seeing how all the moving parts come together but it does not allow us to examine all possible proportions or continuous distributions. In the next post we’ll look at how we can use <em>conjugate</em> priors to address these problems.</p>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>In this post we moved from Bayes rule to introducing Bayesian inference. We used a grid approximation approach to examine how the data supported several hypotheses at once. This allowed us to see how the moving parts of a basic Bayesian analysis come together. As we move on to examine more complex scenarios keep in mind that all that’s happening under the hood is what was done here.</p>
+
+
+
+</section>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-amaralReproducibilityExpectLess2021" class="csl-entry" role="listitem">
+Amaral, Olavo B., and Kleber Neves. 2021. <span>“Reproducibility: Expect Less of the Scientific Paper.”</span> <em>Nature</em> 597 (7876): 329–31. <a href="https://doi.org/10.1038/d41586-021-02486-7">https://doi.org/10.1038/d41586-021-02486-7</a>.
+</div>
+<div id="ref-cohen1994" class="csl-entry" role="listitem">
+Cohen, Jacob. 1994. <span>“The Earth Is Round (p.05).”</span> <em>American Psychologist</em> 49 (12): 997–1003. <a href="https://doi.org/10.1037/0003-066X.49.12.997">https://doi.org/10.1037/0003-066X.49.12.997</a>.
+</div>
+<div id="ref-erringtonChallengesAssessingReplicability2021" class="csl-entry" role="listitem">
+Errington, Timothy M, Alexandria Denis, Nicole Perfito, Elizabeth Iorns, and Brian A Nosek. 2021. <span>“Challenges for Assessing Replicability in Preclinical Cancer Biology.”</span> Edited by Peter Rodgers and Eduardo Franco. <em>eLife</em> 10 (December): e67995. <a href="https://doi.org/10.7554/eLife.67995">https://doi.org/10.7554/eLife.67995</a>.
+</div>
+<div id="ref-gelman2019" class="csl-entry" role="listitem">
+Gelman, Andrew. 2019. <span>“Don’t <span class="nocase">Calculate Post-hoc Power Using Observed Estimate</span> of <span>Effect Size</span>.”</span> <em>Annals of Surgery</em> 269 (1): e9–10. <a href="https://doi.org/10.1097/SLA.0000000000002908">https://doi.org/10.1097/SLA.0000000000002908</a>.
+</div>
+<div id="ref-hoenig2001" class="csl-entry" role="listitem">
+Hoenig, John M., and Dennis M. Heisey. 2001. <span>“The <span>Abuse</span> of <span>Power</span>.”</span> <em>The American Statistician</em> 55 (1): 19–24. <a href="https://doi.org/10.1198/000313001300339897">https://doi.org/10.1198/000313001300339897</a>.
+</div>
+<div id="ref-hubbard2003" class="csl-entry" role="listitem">
+Hubbard, Raymond, and M. J Bayarri. 2003. <span>“Confusion <span>Over Measures</span> of <span>Evidence</span> (p’s) <span>Versus Errors</span> (<span><span class="math inline">\(\alpha\)</span></span>’s) in <span>Classical Statistical Testing</span>.”</span> <em>The American Statistician</em> 57 (3): 171–78. <a href="https://doi.org/10.1198/0003130031856">https://doi.org/10.1198/0003130031856</a>.
+</div>
+<div id="ref-opensciencecollaborationEstimatingReproducibilityPsychological2015" class="csl-entry" role="listitem">
+OPEN SCIENCE COLLABORATION. 2015. <span>“Estimating the Reproducibility of Psychological Science.”</span> <em>Science</em> 349 (6251): aac4716. <a href="https://doi.org/10.1126/science.aac4716">https://doi.org/10.1126/science.aac4716</a>.
+</div>
+<div id="ref-tukey1991" class="csl-entry" role="listitem">
+Tukey, John W. 1991. <span>“The <span>Philosophy</span> of <span>Multiple Comparisons</span>.”</span> <em>Statistical Science</em> 6 (1): 100–116.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

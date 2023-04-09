@@ -23,7 +23,7 @@ $$
 
 Bayes rule allows us to 'invert' conditional probabilities & this is surprisingly useful!
 
-In that post I used Bayes rule to calculate the probability of a being on a particular degree programme *given* you earned a first class mark and also the probability of actually having a disease after testing positive for the disease. These examples both used single probability values but Bayes rule really shines when we apply it to *entire probability distributions*. This can be harder to wrap your head around. In this post we'll use a technique called grid approximation to illustrate how all the moving parts fit together. We'll see how Bayes rule allows us to use an entire probability distribution to test multiple hypotheses together.
+In the first post I used Bayes rule to calculate the probability of a being on a particular degree programme *given* you earned a first class mark and also the probability of actually having a disease after testing positive for the disease. These examples both used single probability values but Bayes rule really shines when we apply it to *entire probability distributions*. This can be harder to wrap your head around. In this post we'll use a technique called grid approximation to illustrate how all the moving parts fit together. We'll see how Bayes rule allows us to use an entire probability distribution to test multiple hypotheses together.
 
 ::: column-margin
 #### What is a probability distribution?
@@ -63,7 +63,7 @@ $$
 
 That is, the probability of the null hypothesis *given* the data. NHST does not give us this.
 
-There are no shortage of other criticisms of the NHST system. For example NHST tells you nothing about any *alternative* hypotheses. We'll see below how a Bayesian approach deals with this.
+There are no shortage of other criticisms of the NHST system. For example NHST tells you nothing about any *alternative* hypotheses. We'll see below onw way a Bayesian approach can deal with this.
 
 Finally NHST (as usually used) is a combination of the Fisherian approach (significance testing) and the Neyman-Pearson (hypothesis testing) approaches to inference. These systems are *not* compatible and whilst each of these alone is coherent the hybrid that is NHST is not coherent.
 
@@ -71,7 +71,7 @@ Finally NHST (as usually used) is a combination of the Fisherian approach (signi
 
 [@hubbard2003]
 
-All that's not to say frequentist statistics is not useful - it's just sensible to know what you're getting for your money.
+All that is not to say frequentist statistics is not useful - it's just sensible to know what you're getting for your money.
 
 Bayes rule is a straightforward combination of basic probability rules and as such inference based on Bayes rule is the result of a coherent system. If you want to read more about the incoherence in NHST then two accessible accounts are given by @cohen1994 & @hubbard2003.
 
@@ -99,7 +99,7 @@ Before we go down the Bayesian route though let's take a look at the usual frequ
 
 The marks for 2015 show that 8 out of 104 students got a mark of 70% or more, a proportion of 7.7%. How can I compare this data to my belief that 10% of students are capable of a mark of 70% or more?
 
-The outcome here is binary i.e. each student can score 70% or more (a 'success') or less than 70% (a 'failure'; no judgement - 'success'& 'failure' are just conventional labels for binary outcomes). We have some number of trials and some number of successes. In a situation like this we can use the binomial distribution to calculate a p-value from the data we have. In R the `binom.test()` function does the heavy lifting. We enter the number of 'successes' (8), the total number of trials (104) and the probability of success under the null hypothesis. Since I believe 10% of students are capable of a first class mark the probability of success under the null hypothesis here is 0.1.
+The outcome here is binary i.e. each student can score 70% or more (a 'success') or less than 70% (a 'failure'; no judgement - 'success'& 'failure' are just conventional labels for binary outcomes). We have some number of trials (each student represents a trial) and some number of successes. In a situation like this we can use the binomial distribution to calculate a p-value from the data we have. In R the `binom.test()` function does the heavy lifting. We enter the number of 'successes' (8), the total number of trials (104) and the probability of success under the null hypothesis. Since I believe 10% of students are capable of a first class mark the probability of success under the null hypothesis here is 0.1.
 
 ```{r}
 #| label: NHST approach
@@ -120,7 +120,7 @@ Let's move on to a Bayesian analysis. I'll use a simple grid with values represe
 #| label: create prop weights
 
 # set 'plausibility' on proportions of 5, 10, 15 & 20%
-props <- seq(0.05, 0.2, 0.05) # my proportions
+props <- seq(0.05, 0.2, 0.05) # my proportions; start, stop, step
 wgts <- c(4, 8, 3, 0.5) # arbitrary plausibility weight for each proportion; most on 0.1
 cbind(props, wgts)
 ```
@@ -133,11 +133,15 @@ priors <- round(wgts/sum(wgts),2) # convert weights to probabilities
 cbind(props, wgts, priors)
 ```
 
-The `priors` column in the above represents the plausibility of each proportion. Note that most of my prior probability is on 10%. I don't place much probability on 20%; first class marks should be hard to get otherwise they're rather meaningless. These discrete probabilities make a probability distribution.
+The `priors` column in the above represents the plausibility of each proportion. Note that most of my prior probability is on 10%. I don't place much probability on 20%; first class marks should be hard to get otherwise they're rather meaningless! 
+
+![The Wisdom of Buddy Pine](special.png)
+
+These discrete probabilities make a probability distribution.
 
 ```{r}
 #| label: prior probability distribution
-#| fig-cap: Fig 1. The prior probability distribution
+#| fig-cap: The prior probability distribution
 plot(props, priors, type='h', xlab = 'Proportion', ylab='Probability', main = 'Prior distribution', lwd=4)
 points(props, priors, pch=16, cex=2)
 ```
@@ -193,7 +197,7 @@ In the code below I use the `dbinom()` function to quickly calculate the likelih
 
 ```{r}
 #| label: calculate likelihood for each hypothetical proportion
-#| fig-cap: Fig 2. The likelihoods
+#| fig-cap: The likelihoods
 
 # calc all likelihoods
 like_vec <- dbinom(8, 104, props) |> 
@@ -253,7 +257,7 @@ We can plot the posterior.
 
 ```{r}
 #| label: Posterior distribution plot
-#| fig-cap: Fig 3. The posterior distribution
+#| fig-cap: The posterior distribution
 # plot the posteriors
 plot(bayes_tab$theta, bayes_tab$post, type='h', xlab='Proportion', ylab='Posterior Probability', main = 'Posterior distribution', lwd=4)
 points(bayes_tab$theta, bayes_tab$post, pch=16, cex=2)
@@ -263,7 +267,7 @@ The probability of 10% of students achieving 70% or more on the module has gone 
 
 Note that unlike the NHST approach I was able to examine 4 hypotheses at the same time. The Bayesian approach gives me a richer inferential view of the results of my study. Whilst the data supports my belief in 10% I wouldn't be surprised to see a proportion of only 5% (25% probability according to this analysis) but I'd be more surprised to see 15% (2.8% probability according to this analysis). This is a more considered conclusion compared to the usual dichotomous (and wrong) decision taken based on a non-significant p-value of 'no effect'.
 
-![Fig 4. Relationship between prior, likelihood and posterior in a Bayesian analysis.](pics/Bayes_parts_grids.png)
+![Relationship between prior, likelihood and posterior in a Bayesian analysis.](pics/Bayes_parts_grids.png)
 
 The figure above shows how the posterior distribution is constructed in a Bayesian analysis. The posterior is the prior weighted by the likelihood (the $\propto$ symbol means "proportional to" - here it just means we're ignoring the denominator). The grid approach is useful for seeing how all the moving parts come together but it does not allow us to examine all possible proportions or continuous distributions. In the next post we'll look at how we can use *conjugate* priors to address these problems.
 
