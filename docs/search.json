@@ -11,7 +11,7 @@
     "href": "index.html",
     "title": "iaingallagher.github.io",
     "section": "",
-    "text": "Hello Data World 3 (julia)\n\n\n\n\n\n\n\njulia\n\n\n\n\n\n\n\n\n\n\n\nSep 23, 2022\n\n\n\n\n\n\n  \n\n\n\n\nHello Data World 2 (python)\n\n\n\n\n\n\n\npython\n\n\n\n\n\n\n\n\n\n\n\nAug 3, 2022\n\n\n\n\n\n\n  \n\n\n\n\nHello Data World 1 (R)\n\n\n\n\n\n\n\nR\n\n\n\n\n\n\n\n\n\n\n\nJun 14, 2022\n\n\n\n\n\n\n  \n\n\n\n\nQuarto with Github Pages\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nJun 10, 2022\n\n\nIain J Gallagher\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nApr 4, 2022\n\n\nIain J Gallagher\n\n\n\n\n\n\nNo matching items"
+    "text": "Probability and Bayes Rule\n\n\n\n\n\n\n\nR\n\n\nBayes\n\n\n\n\n\n\n\n\n\n\n\nDec 29, 2022\n\n\n\n\n\n\n  \n\n\n\n\nHello Data World 3 (julia)\n\n\n\n\n\n\n\njulia\n\n\n\n\n\n\n\n\n\n\n\nSep 23, 2022\n\n\n\n\n\n\n  \n\n\n\n\nHello Data World 2 (python)\n\n\n\n\n\n\n\npython\n\n\n\n\n\n\n\n\n\n\n\nAug 3, 2022\n\n\n\n\n\n\n  \n\n\n\n\nHello Data World 1 (R)\n\n\n\n\n\n\n\nR\n\n\n\n\n\n\n\n\n\n\n\nJun 14, 2022\n\n\n\n\n\n\n  \n\n\n\n\nQuarto with Github Pages\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nJun 10, 2022\n\n\nIain J Gallagher\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nApr 4, 2022\n\n\nIain J Gallagher\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/hello_data_julia/hello_world_data_julia.html",
@@ -110,6 +110,48 @@
     "title": "Quarto with Github Pages",
     "section": "",
     "text": "A lot of what we did above was once off. For subsequent posts we will:\n\nDraft content in markdown\nTrack that content on the local adding-content branch\n\ngit checkout adding-content\ngit status # make sure you're on adding-content\ngit add XYZ\ngit status\ngit commit -m \"some commit message\"\ngit status\n\nPush the adding-content branch to Github when we’re ready to publish the page\n\ngit push origin adding-content\n\nMerge the changes to the main branch online using a Github pull request\n\nGithub should automatically serve the page we created.\n\nPull the finalised main branch from Github back to the local machine\n\ngit checkout main   \ngit pull origin main"
+  },
+  {
+    "objectID": "posts/bayes_one_bayes_rule/bayes_rule.html",
+    "href": "posts/bayes_one_bayes_rule/bayes_rule.html",
+    "title": "Probability and Bayes Rule",
+    "section": "",
+    "text": "This is the first of a series of posts going over the basics of Bayesian inference. Bayesian inference uses Bayes rule which comes from simple algebra of basic probability rules. In this post we’ll look at the basic rules of probability and derive Bayes rule. We’ll look at a couple of simple examples to see how Bayes rule works.\n\n\n\n\n\n\nNote\n\n\n\nThere’s a little bit of R code in this post and I’m using the new native R pipe |&gt;. If you’re used to tidyverse semantics you might think that |&gt; behaves like the magrittr pipe, %&gt;% but it doesn’t! But it can (mostly) be used in the same way. See here for more details."
+  },
+  {
+    "objectID": "posts/bayes_one_bayes_rule/bayes_rule.html#marginal-probabilities",
+    "href": "posts/bayes_one_bayes_rule/bayes_rule.html#marginal-probabilities",
+    "title": "Probability and Bayes Rule",
+    "section": "Marginal probabilities",
+    "text": "Marginal probabilities\nThe row and column totals for each variable in the table are called the marginal totals.\n\nTable 2. Grade classifications with marginal totals\n\n\n\nProgramme\n\n\n\n\n\n\nGrade\nSES\nSS\nMarginal Total\n\n\n1\n10\n3\n13\n\n\n2.1\n20\n6\n26\n\n\n2.2\n11\n15\n26\n\n\n3\n4\n20\n24\n\n\nMarginal Total\n45\n44\n89\n\n\n\nWe can get R to add marginal totals to contingency tables for us.\n\ngrade_table_marginals &lt;- grade_table |&gt; \n  addmargins()\ngrade_table_marginals\n\n    SES SS Sum\n1    10  3  13\n2.1  20  6  26\n2.2  11 15  26\n3     4 20  24\nSum  45 44  89\n\n\nThe marginal totals can be used to calculate marginal probabilities by dividing the marginal total for a row or column by the grand total. We denote marginal probabilities as \\(P(A)\\) where \\(A\\) is some outcome.\nFor example the marginal probability of students getting a 2.1 is the marginal number of students who got a 2.1 (26) divided by the total number of students in the course (89).\n\\[\nP(2.1) = \\textcolor{#00BFFF}{26}/\\textcolor{#00008B}{89} = 0.29\n\\]\n\nTable 3. Numbers involved in marginal probabilities are coloured.\n\n\n\nProgramme\n\n\n\n\n\n\nGrade\nSES\nSS\nMarginal Total\n\n\n1\n10\n3\n13\n\n\n2.1\n20\n6\n26\n\n\n2.2\n11\n15\n26\n\n\n3\n4\n20\n24\n\n\nMarginal Total\n45\n44\n89\n\n\n\nWe see that \\(P(2.1)\\) is 29%."
+  },
+  {
+    "objectID": "posts/bayes_one_bayes_rule/bayes_rule.html#joint-probabilties",
+    "href": "posts/bayes_one_bayes_rule/bayes_rule.html#joint-probabilties",
+    "title": "Probability and Bayes Rule",
+    "section": "Joint probabilties",
+    "text": "Joint probabilties\nThe probability of two (or more) outcomes considered together is called a joint probability.\nFor events \\(A\\) and \\(B\\) joint probabilities are often written as \\(P(A \\text{ } and \\text{ } B)\\) or \\(P(A, \\text{ } B)\\).\nTo calculate joint probability we divide the number of outcomes that fulfill a specific criteria by the grand total.\nHere an example might be:\n\\[\nP(2.1 \\text{ and } SES)\n\\]\nWe can calculate this probability from the total number of SES students who got a 2.1 classification (20) divided by the total number of students (89).\n\\[\nP(2.1 \\text{ and } SES) = \\textcolor{#00BFFF}{20}/\\textcolor{#00008B}{89} = 0.225\n\\]\n\nTable 4. Numbers involved in joint probabilities are coloured.\n\n\n\n\n\n\n\n\n\nProgramme\n\n\n\n\n\n\nGrade\nSES\nSS\nMarginal Total\n\n\n1\n10\n3\n13\n\n\n2.1\n20\n6\n26\n\n\n2.2\n11\n15\n26\n\n\n3\n4\n20\n24\n\n\nMarginal Total\n45\n44\n89\n\n\n\nWe see that the joint probability of 2.1 and being on the SES programme is 22.5%.\nFor joint probabilities the order of the outcomes doesn’t matter.\n\\(P(A \\text{ and } B)\\) = \\(P(B \\text{ and } A)\\)\nIn R the prop.table() function can convert a contingency table of raw numbers to a table of joint probabilities.\n\ngrade_probs &lt;- grade_table |&gt; \n  prop.table() |&gt;\n  addmargins() |&gt; # add marginal totals\n  round(3) # round to 3dp\n\ngrade_probs\n\n      SES    SS   Sum\n1   0.112 0.034 0.146\n2.1 0.225 0.067 0.292\n2.2 0.124 0.169 0.292\n3   0.045 0.225 0.270\nSum 0.506 0.494 1.000\n\n\n\n\n\n\n\n\nNote\n\n\n\nKey to both marginal and joint probability is that we use the grand total as the denominator to calculate these probabilities."
+  },
+  {
+    "objectID": "posts/bayes_one_bayes_rule/bayes_rule.html#conditional-probabilities",
+    "href": "posts/bayes_one_bayes_rule/bayes_rule.html#conditional-probabilities",
+    "title": "Probability and Bayes Rule",
+    "section": "Conditional probabilities",
+    "text": "Conditional probabilities\nConditional probability is the probability of an event or outcome occurring given some other event or outcome has already occurred or is in place.\nWe denote conditional probabilities as \\(P(outcome | condition)\\).\nWe can read this as “The probability that outcome occurs given condition is in place”.\nWe might ask “What’s the probability of a 2.1 mark given the student is in the SES programme?” We’d denote that as:\n\\[\nP(2.1|SES)\n\\]\n\nTable 5. When we calculate conditional probabilities we restrict ourselves to one row or column (here coloured) of a contingency table.\n\n\n\n\n\n\n\n\n\nProgramme\n\n\n\n\n\n\nGrade\nSES\nSS\nMarginal Total\n\n\n1\n10\n3\n13\n\n\n2.1\n20\n6\n26\n\n\n2.2\n11\n15\n26\n\n\n3\n4\n20\n24\n\n\nMarginal Total\n45\n44\n89\n\n\n\nIf we look in the SES column we see 20 students got a 2.1 classification. There were a total of 45 SES students so \\(P(2.1|SES)\\) is 20/45 or 0.444 or 44.4%.\nThe general formula for conditional probability is:\n\\[\nP(A|B) = \\frac{P(A\\text{ and }B)}{P(B)}\n\\]\nLet’s see this at work for \\(P(2.1 | SES)\\).\nThe joint probability - \\(P(2.1 \\text{ and } SES)\\) - is 20/89 = 0.225.\nThe marginal probability of SES - \\(P(SES)\\) - is 45/89 = 0.506.\nThe conditional probability of 2.1 given SES (\\(P(2.1 | SES)\\)) is therefore 0.225/0.506 = 0.444; exactly the same as before.\nImportantly \\(P(A|B) \\neq P(B|A)\\).\nExamining our contingency table we saw that \\(P(2.1|SES)\\) was 0.444.\nHowever this is not the same as \\(P(SES|2.1) = \\frac{P(2.1 \\text{ and } SES)}{P(2.1)}\\) = [(20/89) / (26/89)] = 0.77.\n\n\n\n\n\n\nNote\n\n\n\nKey to conditional probability calculations using a contingency table is that we are restricting ourselves to one row or column of the table."
+  },
+  {
+    "objectID": "posts/bayes_one_bayes_rule/bayes_rule.html#the-general-multiplication-rule",
+    "href": "posts/bayes_one_bayes_rule/bayes_rule.html#the-general-multiplication-rule",
+    "title": "Probability and Bayes Rule",
+    "section": "The General Multiplication rule",
+    "text": "The General Multiplication rule\nWe can rearrange the equation for conditional probability to get the General Multiplication Rule for calculating the joint probability of A and B.\n\\[\nP(A \\text{ and } B) = P(A|B)P(B)\n\\]\nThis is useful if we are not given the joint probability for some outcome.\nMaybe we only know that 50.6% of students on the module are on the SES programme and that if a student was on the SES programme the probability of a 2.1. was 44.4%.\nWe can use this information to work back to the joint probability, \\(P(2.1 \\text{ and } SES\\)) using the formula above.\n\\(P(2.1 \\text{ and } SES) = P(2.1|SES)P(SES))\\) = 0.444 * 0.506 = 0.225 - i.e. 22.5% as before."
+  },
+  {
+    "objectID": "posts/bayes_one_bayes_rule/bayes_rule.html#components-of-bayes-rule",
+    "href": "posts/bayes_one_bayes_rule/bayes_rule.html#components-of-bayes-rule",
+    "title": "Probability and Bayes Rule",
+    "section": "Components of Bayes rule",
+    "text": "Components of Bayes rule\nEach part of Bayes rule has a name.\nIn the numerator \\(P(A|B)\\) is the likelihood and \\(P(B)\\) is the prior. The denominator, \\(P(A)\\) is the marginal probability of A and is also called the evidence. The left hand probability, \\(P(B|A)\\) is called the posterior.\n\n\n\nFigure 2. The components of Bayes rule.\n\n\nBeing able to go from \\(P(A|B)\\) to \\(P(B|A\\)) might seem trivial but it turns out to be really useful."
   },
   {
     "objectID": "posts/hello_data_r/hello_world_data_R.html",
