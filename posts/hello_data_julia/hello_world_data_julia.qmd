@@ -9,7 +9,7 @@ editor_options:
 format:
   html:
     code-overflow: wrap
-image: julia_logo.png
+image: julia_circles.png
 jupyter: julia-1.8
 ---
 
