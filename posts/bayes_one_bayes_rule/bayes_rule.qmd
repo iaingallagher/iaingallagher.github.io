@@ -1,18 +1,15 @@
 ---
 title: Probability and Bayes Rule
 date: 12/29/2022
-
 bibliography: bayes_rule_refs.bib
 categories:
   - R
   - Bayes
-  
 editor_options:
   chunk_output_type: console
 format:
   html:
     code-overflow: wrap
-
 image: bayes_leds.jpg
 ---
 
@@ -21,12 +18,12 @@ image: bayes_leds.jpg
 This is the first of a series of posts going over the basics of Bayesian inference. Bayesian inference uses Bayes rule which comes from simple algebra of basic probability rules. In this post we'll look at the basic rules of probability and derive Bayes rule. We'll look at a couple of simple examples to see how Bayes rule works.
 
 ::: callout-note
-There's a little bit of `R` code in this post and I'm using the new native `R` pipe `|>`. If you're used to `tidyverse` semantics you might think that `|>` behaves like the `magrittr` pipe, `%>%` but it doesn't! See [here](https://ivelasq.rbind.io/blog/understanding-the-r-pipe/) for more details.
+There's a little bit of `R` code in this post and I'm using the new native `R` pipe `|>`. If you're used to `tidyverse` semantics you might think that `|>` behaves like the `magrittr` pipe, `%>%` but it doesn't! But it can (mostly) be used in the same way. See [here](https://ivelasq.rbind.io/blog/understanding-the-r-pipe/) for more details.
 :::
 
 # On the way to Bayes rule
 
-The grade classifications for a course I taught in my previous job is shown in the table below. The course was taken by students across two programmes.
+The grade classifications for a course I taught in my previous job are shown in the table below. The course was taken by students across two programmes.
 
 |           | Programme |     |
 |-----------|-----------|-----|
@@ -130,7 +127,7 @@ $$
 
 : Table 4. Numbers involved in joint probabilities are coloured.
 
-We see that the joint probability of 2.1 and being on the SES programme is \~22.5%.
+We see that the joint probability of 2.1 and being on the SES programme is 22.5%.
 
 For joint probabilities the order of the outcomes doesn't matter.
 
@@ -167,7 +164,7 @@ $$
 
 |                    | Programme                      |                               |                               |
 |--------------------|--------------------------------|-------------------------------|-------------------------------|
-| **Grade**          | [SES]{style="color: #00BFFF;"} | SS                            | **Marginal Total**            |
+| **Grade**          | [SES]{style="color: #5F9EA0;"} | SS                            | **Marginal Total**            |
 | 1                  | [10]{style="color: #5F9EA0;"}  | [3]{style="color: #D3D3D3;"}  | [13]{style="color: #D3D3D3;"} |
 | 2.1                | [20]{style="color: #00BFFF;"}  | [6]{style="color: #D3D3D3;"}  | [26]{style="color: #D3D3D3;"} |
 | 2.2                | [11]{style="color: #5F9EA0;"}  | [15]{style="color: #D3D3D3;"} | [26]{style="color: #D3D3D3;"} |
