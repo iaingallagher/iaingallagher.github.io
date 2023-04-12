@@ -178,6 +178,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
 <p>In the <a href="https://iaingallagher.github.io/posts/bayes_two_grid_approx/Bayes_part_2_grid_estimation.html">last post</a> we used Bayes theorem and grid approximation to estimate the probability of 4 different hypotheses about the proportion of students achieving a high mark in an undergraduate course. Specifically we examined proportions of 5%, 10%, 15% &amp; 20%. For each proportion (hypothesis) we set a prior probability distribution <span class="math inline">\(P(H)\)</span>, used the binomial distribution to calculate the likelihood of the data we had for each of the prior probabilities, multiplied the prior probabilities and the likelihoods together and finally calculated the posterior distribution by dividing these products by their combined sum. Grid approximation is useful to see how the moving parts work but it doesn’t scale well and it’s not useful if we are dealing with continuous priors &amp; likelihoods. For the student marks data we might want to consider <strong>any</strong> proportion for first class marks from 0 to 1.</p>
+<p>If you want to follow along with the analysis later the data are <a href="https://github.com/iaingallagher/iaingallagher.github.io/tree/main/data">here</a>.</p>
 </section>
 <section id="conjugate-distributions" class="level1">
 <h1>Conjugate distributions</h1>
@@ -248,7 +249,7 @@ Beta(a, b)
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="BayesIntro2_Conjugate_Priors_files/figure-html/Several Beta distributions-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="BayesIntro3_Conjugate_Priors_files/figure-html/Several Beta distributions-1.png" class="img-fluid figure-img" width="672"></p>
 <p></p><figcaption class="figure-caption">Beta distributions</figcaption><p></p>
 </figure>
 </div>
@@ -272,7 +273,7 @@ Beta(a, b)
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="BayesIntro2_Conjugate_Priors_files/figure-html/Some more beta distributions-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="BayesIntro3_Conjugate_Priors_files/figure-html/Some more beta distributions-1.png" class="img-fluid figure-img" width="672"></p>
 <p></p><figcaption class="figure-caption">More Beta distributions</figcaption><p></p>
 </figure>
 </div>
@@ -311,7 +312,7 @@ Beta(a, b)
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="BayesIntro2_Conjugate_Priors_files/figure-html/Uniform Beta distribution-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="BayesIntro3_Conjugate_Priors_files/figure-html/Uniform Beta distribution-1.png" class="img-fluid figure-img" width="672"></p>
 <p></p><figcaption class="figure-caption">A Uniform prior distribution (Beta(1,1))</figcaption><p></p>
 </figure>
 </div>
@@ -333,7 +334,7 @@ Beta(a, b)
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="BayesIntro2_Conjugate_Priors_files/figure-html/Plot prior &amp; posterior-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="BayesIntro3_Conjugate_Priors_files/figure-html/Plot prior &amp; posterior-1.png" class="img-fluid figure-img" width="672"></p>
 <p></p><figcaption class="figure-caption">Prior &amp; posterior</figcaption><p></p>
 </figure>
 </div>
@@ -398,7 +399,7 @@ Beta(a, b)
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="BayesIntro2_Conjugate_Priors_files/figure-html/Plot HDI-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="BayesIntro3_Conjugate_Priors_files/figure-html/Plot HDI-1.png" class="img-fluid figure-img" width="672"></p>
 <p></p><figcaption class="figure-caption">Posterior with 95% HDI</figcaption><p></p>
 </figure>
 </div>
@@ -424,7 +425,7 @@ Beta(a, b)
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="BayesIntro2_Conjugate_Priors_files/figure-html/Informed prior-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="BayesIntro3_Conjugate_Priors_files/figure-html/Informed prior-1.png" class="img-fluid figure-img" width="672"></p>
 <p></p><figcaption class="figure-caption">An informed prior</figcaption><p></p>
 </figure>
 </div>
@@ -447,7 +448,7 @@ Beta(a, b)
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="BayesIntro2_Conjugate_Priors_files/figure-html/Informed prior analysis-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="BayesIntro3_Conjugate_Priors_files/figure-html/Informed prior analysis-1.png" class="img-fluid figure-img" width="672"></p>
 <p></p><figcaption class="figure-caption">Informed prior and posterior</figcaption><p></p>
 </figure>
 </div>
@@ -487,7 +488,7 @@ Beta(a, b)
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="BayesIntro2_Conjugate_Priors_files/figure-html/New posterior with HDI-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="BayesIntro3_Conjugate_Priors_files/figure-html/New posterior with HDI-1.png" class="img-fluid figure-img" width="672"></p>
 <p></p><figcaption class="figure-caption">Informed prior and posterior with HDI</figcaption><p></p>
 </figure>
 </div>
@@ -554,7 +555,7 @@ dbl (2): year, first
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="BayesIntro2_Conjugate_Priors_files/figure-html/Sequential analysis-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="BayesIntro3_Conjugate_Priors_files/figure-html/Sequential analysis-1.png" class="img-fluid figure-img" width="672"></p>
 <p></p><figcaption class="figure-caption">Updating posteriors</figcaption><p></p>
 </figure>
 </div>
@@ -607,7 +608,7 @@ dbl (2): year, first
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="BayesIntro2_Conjugate_Priors_files/figure-html/Non-informative prior-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="BayesIntro3_Conjugate_Priors_files/figure-html/Non-informative prior-1.png" class="img-fluid figure-img" width="672"></p>
 <p></p><figcaption class="figure-caption">Data will overwhelm an uninformative prior</figcaption><p></p>
 </figure>
 </div>
@@ -631,7 +632,7 @@ dbl (2): year, first
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co"># plot prior, posterior &amp; likelihood</span></span>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_beta_binomial</span>(<span class="at">alpha =</span> <span class="dv">2</span>, <span class="at">beta =</span> <span class="dv">18</span>, <span class="at">y =</span> <span class="fu">sum</span>(ten<span class="sc">$</span>first), <span class="at">n =</span> <span class="fu">nrow</span>(ten)) <span class="sc">+</span> <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="BayesIntro2_Conjugate_Priors_files/figure-html/Using `bayesrules`-1.png" class="img-fluid" width="672"></p>
+<p><img src="BayesIntro3_Conjugate_Priors_files/figure-html/Using `bayesrules`-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># summarise posterior</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summarize_beta_binomial</span>(<span class="at">alpha =</span> <span class="dv">2</span>, <span class="at">beta =</span> <span class="dv">18</span>, <span class="at">y =</span> <span class="fu">sum</span>(ten<span class="sc">$</span>first), <span class="at">n =</span> <span class="fu">nrow</span>(ten))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
